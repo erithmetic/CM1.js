@@ -38,7 +38,7 @@ Now, we can calculate emissions:
       alert("My emissions are: " + estimate.value())
     })
 
-There are a whole bunch of [other emitters](http://carbon.brighterplanet.com/emitters) available, including computer usage, rail trips, and flights.
+There are a whole bunch of [other emitters](http://carbon.brighterplanet.com/models) available, including computer usage, rail trips, and flights.
 
 ## Requirements
 
