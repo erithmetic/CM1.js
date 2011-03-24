@@ -118,6 +118,16 @@ describe('EmissionEstimator', function() {
         fuel_economy: 38.2
       });
     });
+    it('includes Carbon.key if set', function() {
+      Carbon.key = 'abc123';
+      expect(estimator.params()).toEqual({
+        make: 'Honda',
+        model: 'Fit',
+        fuel_economy: 38.2,
+        key: 'abc123'
+      });
+      Carbon.key = null;
+    });
   });
 
   describe('#getEmissionEstimate', function() {
