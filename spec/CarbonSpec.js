@@ -1,16 +1,19 @@
 RentalCar = function() {};
+RentalCar.prototype.mileage = function() { return 112300; };
+
 Carbon.emitter(RentalCar, function(emitter) {
   emitter.emitAs('automobile');
   emitter.provide('make');
   emitter.provide('model');
   emitter.provide('fuel_economy', { as: 'fuel_efficiency' });
+  emitter.provide('annual_distance_estimate', { as: 'mileage' });
 })
 
 describe('Carbon.js usage', function() {
   it('asynchronously calculates emissions for an emitter', function() {
     fakeAjax({ urls: {
-      'http://carbon.brighterplanet.com/automobiles.json?make=Honda&model=Fit&fuel_economy=36.7': {
-        successData: Cm1Result.fit  
+      'http://carbon.brighterplanet.com/automobiles.json?make=Honda&model=Fit&fuel_economy=36.7&annual_distance_estimate=112300': {
+        successData: Cm1Result.fit
       }
     } });
 
@@ -106,6 +109,7 @@ describe('EmissionEstimator', function() {
 
   describe('#params', function() {
     it('returns an empty object if no params are set', function() {
+      car.mileage = function() { return null; };
       car.make = null;
       car.model = null;
       car.fuel_efficiency = null;
@@ -115,7 +119,8 @@ describe('EmissionEstimator', function() {
       expect(estimator.params()).toEqual({
         make: 'Honda',
         model: 'Fit',
-        fuel_economy: 38.2
+        fuel_economy: 38.2,
+        annual_distance_estimate: 112300
       });
     });
     it('includes Carbon.key if set', function() {
@@ -124,6 +129,7 @@ describe('EmissionEstimator', function() {
         make: 'Honda',
         model: 'Fit',
         fuel_economy: 38.2,
+        annual_distance_estimate: 112300,
         key: 'abc123'
       });
       Carbon.key = null;
@@ -135,7 +141,7 @@ describe('EmissionEstimator', function() {
 
     beforeEach(function() {
       fakeAjax({ urls: {
-        'http://carbon.brighterplanet.com/automobiles.json?make=Honda&model=Fit&fuel_economy=38.2': {
+        'http://carbon.brighterplanet.com/automobiles.json?make=Honda&model=Fit&fuel_economy=38.2&annual_distance_estimate=112300': {
           successData: Cm1Result.fit  
         }
       } });
