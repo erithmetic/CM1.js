@@ -5,7 +5,7 @@ describe('EmissionEstimator', function() {
     car = new RentalCar();
     car.make = 'Honda';
     car.model = 'Fit';
-    car.fuel_efficiency = 38.2;
+    car.fuel_economy = 38.2;
 
     estimator = new EmissionEstimator(car, RentalCar.carbon);
   })
@@ -21,14 +21,14 @@ describe('EmissionEstimator', function() {
       car.mileage = function() { return null; };
       car.make = null;
       car.model = null;
-      car.fuel_efficiency = null;
+      car.fuel_economy = null;
       expect(estimator.params()).toEqual({});
     });
     it('returns an object mapping CM1 params to emitter attribute values', function() {
       expect(estimator.params()).toEqual({
         make: 'Honda',
         model: 'Fit',
-        fuel_economy: 38.2,
+        fuel_efficiency: 38.2,
         annual_distance_estimate: 112300
       });
     });
@@ -37,7 +37,7 @@ describe('EmissionEstimator', function() {
       expect(estimator.params()).toEqual({
         make: 'Honda',
         model: 'Fit',
-        fuel_economy: 38.2,
+        fuel_efficiency: 38.2,
         annual_distance_estimate: 112300,
         key: 'abc123'
       });
@@ -50,7 +50,7 @@ describe('EmissionEstimator', function() {
 
     beforeEach(function() {
       fakeAjax({ urls: {
-        'http://carbon.brighterplanet.com/automobiles.json?make=Honda&model=Fit&fuel_economy=38.2&annual_distance_estimate=112300': {
+        'http://carbon.brighterplanet.com/automobiles.json?make=Honda&model=Fit&fuel_efficiency=38.2&annual_distance_estimate=112300': {
           successData: Cm1Result.fit  
         }
       } });

@@ -9,16 +9,16 @@ EmissionEstimator.prototype.url = function() {
 
 EmissionEstimator.prototype.params = function() {
   var params = {};
-  for(var characteristic in this.carbon.attribute_map) {
-    var emitter_field = this.carbon.attribute_map[characteristic];
-    var value = this.emitter[emitter_field];
+  for(var attribute in this.carbon.attribute_map) {
+    var cm1_field = this.carbon.attribute_map[attribute];
+    var value = this.emitter[attribute];
     var result;
     if(value) 
-      result = this.emitter[emitter_field];
+      result = value;
     if(typeof result == 'function')
       result = result.apply(this.emitter);
     if(result)
-      params[characteristic] = result;
+      params[cm1_field] = result;
   }
 
   if(Carbon.key) {

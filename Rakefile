@@ -17,3 +17,10 @@ task :build do
     `cat #{js} >> build/Carbon.js`
   end
 end
+
+task :test do
+  require 'launchy'
+
+  file = File.expand_path('SpecRunner.html')
+  Launchy::Browser.run(file)
+end

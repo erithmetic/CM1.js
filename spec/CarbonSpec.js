@@ -1,7 +1,7 @@
 describe('Carbon.js usage', function() {
   it('asynchronously calculates emissions for an emitter', function() {
     fakeAjax({ urls: {
-      'http://carbon.brighterplanet.com/automobiles.json?make=Honda&model=Fit&fuel_economy=36.7&annual_distance_estimate=112300': {
+      'http://carbon.brighterplanet.com/automobiles.json?make=Honda&model=Fit&fuel_efficiency=36.7&annual_distance_estimate=112300': {
         successData: Cm1Result.fit
       }
     } });
@@ -9,7 +9,7 @@ describe('Carbon.js usage', function() {
     var car = new RentalCar();
     car.make = 'Honda';
     car.model = 'Fit';
-    car.fuel_efficiency = 36.7;
+    car.fuel_economy = 36.7;
 
     var value;
     car.getEmissionEstimate(function(estimate) {

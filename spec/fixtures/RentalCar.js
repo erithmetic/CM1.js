@@ -6,5 +6,5 @@ Carbon.emitter(RentalCar, function(emitter) {
   emitter.provide('make');
   emitter.provide('model');
   emitter.provide('fuel_economy', { as: 'fuel_efficiency' });
-  emitter.provide('annual_distance_estimate', { as: 'mileage' });
+  emitter.provide('mileage', { as: 'annual_distance_estimate' });
 })

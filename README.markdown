@@ -12,7 +12,7 @@ You can turn any object into a carbon calculating machine. For example, let's sa
     var car = new RentalCar();
     car.make = 'Honda';
     car.model = 'Fit';
-    car.fuel_efficiency = 36.7;
+    car.fuel_economy = 36.7;
 
 Now we want to figure out how much CO2 it emits. Carbon.js will add carbon calculation powers to your object. Before instantiating a RentlCar, use `Carbon.emitter()` to tell your object how to use CM1 to calculate emissions. A new function called `getEmissionEstimate()` will be added to your class.
 
@@ -32,7 +32,7 @@ Now, we can calculate emissions:
     var car = new RentalCar();
     car.make = 'Honda';
     car.model = 'Fit';
-    car.fuel_efficiency = 36.7;
+    car.fuel_economy = 36.7;
 
     car.getEmissionEstimate(function(estimate) {
       alert("My emissions are: " + estimate.value());
