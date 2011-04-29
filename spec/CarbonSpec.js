@@ -37,7 +37,7 @@ describe('Carbon', function() {
     it('sets the type of emitter', function() {
       expect(RentalCar.carbon.emitter_name).toBe('automobile');
     });
-    it('creates an #emissionEstimate method on the target class', function() {
+    it('creates an #emissionEstimate property on the target class', function() {
       expect(car.emissionEstimate).toBeInstanceOf(EmissionEstimate);
     });
     it('creates an #emissionEstimator method on the target class', function() {
