@@ -1,11 +1,4 @@
-EmissionEstimator = function(emitter, carbon) {
-  this.emitter = emitter;
-  this.carbon = carbon;
-};
-
-EmissionEstimator.prototype.url = function() {
-  return 'http://carbon.brighterplanet.com/' + this.carbon.emitter_name.pluralize() + '.json';
-};
+EmissionEstimator = function() {};
 
 EmissionEstimator.prototype.params = function() {
   var params = {};
@@ -29,20 +22,21 @@ EmissionEstimator.prototype.params = function() {
 };
 
 EmissionEstimator.prototype.getEmissionEstimate = function(onSuccess, onError) {
-  $.ajax({
-    url: this.url(),
-    data: this.params(),
-    dataType: 'json',
-    success: this.onEstimateSuccess(onSuccess),
-    error: onError
-  });
+  var options = this.ajaxOptions;
+  options.success = EmissionEstimatorEvents.estimateSuccess(this, onSuccess);
+  options.error = onError;
+  options.url = this.url();
+  options.data = this.params();
+  $.ajax(options);
 };
 
 // Events
 
-EmissionEstimator.prototype.onEstimateSuccess = function(onSuccess) {
-  return $.proxy(function(result) {
-    this.emitter.emissionEstimate.data = result;
-    onSuccess(this.emitter.emissionEstimate);
-  }, this);
+EmissionEstimatorEvents = {
+  estimateSuccess: function(estimator, onSuccess) {
+    return function(result) {
+      estimator.emitter.emissionEstimate.data = result;
+      onSuccess(estimator.emitter.emissionEstimate);
+    };
+  }
 };

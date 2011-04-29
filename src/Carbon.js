@@ -8,7 +8,8 @@ Carbon.emitter = function(klass, definition) {
   klass.prototype.emissionEstimate = new EmissionEstimate();
   klass.prototype.emissionEstimator = function() {
     if(!this._emissionEstimator) {
-      this._emissionEstimator = new EmissionEstimator(this, klass.carbon);
+      var estimator = jQuery.browser.msie ? JSONPEmissionEstimator : JSONEmissionEstimator;
+      this._emissionEstimator = new estimator(this, klass.carbon);
     }
 
     return this._emissionEstimator;
