@@ -8,6 +8,7 @@ task :build do
   FileUtils.rm_f('build/Carbon.js')
   jss = Dir.glob('src/**/*.js')
   jss = %w{
+    src/jquery.iecors.js
     src/String.js
     src/EmissionEstimate.js
     src/EmissionEstimator.js
