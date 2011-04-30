@@ -40,13 +40,8 @@ describe('Carbon', function() {
     it('creates an #emissionEstimate property on the target class', function() {
       expect(car.emissionEstimate).toBeInstanceOf(EmissionEstimate);
     });
-    it('creates an #emissionEstimator method returning a JSONEmissionEstimator for non-IE browsers', function() {
-      jQuery.browser.msie = false;
-      expect(car.emissionEstimator()).toBeInstanceOf(JSONEmissionEstimator);
-    });
-    it('creates an #emissionEstimator method returning a JSONPEmissionEstimator for IE browsers', function() {
-      jQuery.browser.msie = true;
-      expect(car.emissionEstimator()).toBeInstanceOf(JSONPEmissionEstimator);
+    it('creates an #emissionEstimator method on the target class', function() {
+      expect(car.emissionEstimator()).toBeInstanceOf(EmissionEstimator);
     });
     it('creates a #getEmissionEstimate method on the target class', function() {
       expect(car.getEmissionEstimate()).not.toBe(null);

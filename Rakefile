@@ -4,16 +4,13 @@ load 'jasmine/tasks/jasmine.rake'
 task :default => :jasmine
 
 task :build do
-  FileUtils.mkdir_p('build')
-  FileUtils.rm_f('build/Carbon.js')
+  `echo '' > public/javascripts/application.js` # N.B. this doesn't work on windows, you have to manually remove the first line of application.js afterwards
   jss = Dir.glob('src/**/*.js')
   jss = %w{
     src/jquery.iecors.js
     src/String.js
     src/EmissionEstimate.js
     src/EmissionEstimator.js
-    src/JSONEmissionEstimator.js
-    src/JSONPEmissionEstimator.js
     src/Carbon.js
   }
   jss.each do |js|
