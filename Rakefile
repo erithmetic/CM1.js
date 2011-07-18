@@ -23,5 +23,5 @@ task :test do
   require 'launchy'
 
   file = File.expand_path('SpecRunner.html')
-  Launchy::Browser.run(file)
+  Launchy.open "file://#{file}"
 end
