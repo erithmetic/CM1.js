@@ -1,27 +1,9 @@
-require 'jasmine'
-load 'jasmine/tasks/jasmine.rake'
-
-task :default => :jasmine
-
 task :build do
-  `echo '' > public/javascripts/application.js` # N.B. this doesn't work on windows, you have to manually remove the first line of application.js afterwards
-  jss = Dir.glob('src/**/*.js')
-  jss = %w{
-    src/jquery.iecors.js
-    src/String.js
-    src/EmissionEstimate.js
-    src/EmissionEstimator.js
-    src/Carbon.js
-  }
-  jss.each do |js|
-    puts "Adding #{js}"
-    `cat #{js} >> build/Carbon.js`
-  end
+  puts `./node_modules/.bin/browserify -o build/CM1.js -e lib/CM1.js`
 end
 
-task :test do
-  require 'launchy'
-
-  file = File.expand_path('SpecRunner.html')
-  Launchy.open "file://#{file}"
+task :test => :build do
+  puts `./node_modules/.bin/vows test/*`
 end
+
+task :default => :test

@@ -1,7 +1,9 @@
-RentalCar = function() {};
+var CM1 = require('../../lib/cm1');
+
+var RentalCar = module.exports = function() {};
 RentalCar.prototype.mileage = function() { return 112300; };
 
-Carbon.emitter(RentalCar, function(emitter) {
+CM1.emitter(RentalCar, function(emitter) {
   emitter.emitAs('automobile');
   emitter.provide('make');
   emitter.provide('model');
