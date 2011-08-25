@@ -10,6 +10,7 @@
     "browserify": "*",
     "http-browserify": "*",
     "jsdom": "*",
+    "nake": "*",
     "sinon": "*",
     "vows": "*"
   },
