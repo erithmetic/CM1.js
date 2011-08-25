@@ -3,7 +3,7 @@ var child = require('child_process');
 
 nake.task('build', function() {
   console.log("Browserifying...");
-  child.exec('./node_modules/.bin/browserify -o build/CM1.js');
+  child.exec('./node_modules/.bin/browserify -o CM1.js');
 });
 
 nake.task('test', function() {
