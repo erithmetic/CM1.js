@@ -310,6 +310,508 @@ exports.extname = function(path) {
     return module.exports;
 };
 
+require.modules["/node_modules/http-browserify/package.json"] = function () {
+    var module = { exports : {} };
+    var exports = module.exports;
+    var __dirname = "/node_modules/http-browserify";
+    var __filename = "/node_modules/http-browserify/package.json";
+    
+    var require = function (file) {
+        return __require(file, "/node_modules/http-browserify");
+    };
+    
+    require.resolve = function (file) {
+        return __require.resolve(name, "/node_modules/http-browserify");
+    };
+    
+    require.modules = __require.modules;
+    __require.modules["/node_modules/http-browserify/package.json"]._cached = module.exports;
+    
+    (function () {
+        module.exports = {"name":"http-browserify","version":"0.0.0","description":"http module compatability for browserify","main":"index.js","browserify":"browser.js","directories":{"lib":".","example":"example","test":"test"},"devDependencies":{"express":"2.4.x","browserify":"1.4.x"},"repository":{"type":"git","url":"http://github.com/substack/http-browserify.git"},"keywords":["http","browserify","compatible","meatless","browser"],"author":{"name":"James Halliday","email":"mail@substack.net","url":"http://substack.net"},"license":"MIT/X11","engine":{"node":">=0.4"}};
+    }).call(module.exports);
+    
+    __require.modules["/node_modules/http-browserify/package.json"]._cached = module.exports;
+    return module.exports;
+};
+
+require.modules["/node_modules/http-browserify/browser.js"] = function () {
+    var module = { exports : {} };
+    var exports = module.exports;
+    var __dirname = "/node_modules/http-browserify";
+    var __filename = "/node_modules/http-browserify/browser.js";
+    
+    var require = function (file) {
+        return __require(file, "/node_modules/http-browserify");
+    };
+    
+    require.resolve = function (file) {
+        return __require.resolve(name, "/node_modules/http-browserify");
+    };
+    
+    require.modules = __require.modules;
+    __require.modules["/node_modules/http-browserify/browser.js"]._cached = module.exports;
+    
+    (function () {
+        var http = module.exports;
+var EventEmitter = require('events').EventEmitter;
+var Request = require('./lib/request');
+
+http.request = function (params, cb) {
+    if (!params) params = {};
+    if (!params.host) params.host = window.location.host.split(':')[0];
+    if (!params.port) params.port = window.location.port;
+    
+    var req = new Request(new xhrHttp, params);
+    if (cb) req.on('response', cb);
+    return req;
+};
+
+http.get = function (params, cb) {
+    params.method = 'GET';
+    var req = http.request(params, cb);
+    req.end();
+    return req;
+};
+
+var xhrHttp = (function () {
+    if (typeof window === 'undefined') {
+        throw new Error('no window object present');
+    }
+    else if (window.XMLHttpRequest) {
+        return window.XMLHttpRequest;
+    }
+    else if (window.ActiveXObject) {
+        var axs = [
+            'Msxml2.XMLHTTP.6.0',
+            'Msxml2.XMLHTTP.3.0',
+            'Microsoft.XMLHTTP'
+        ];
+        for (var i = 0; i < axs.length; i++) {
+            try {
+                var ax = new(window.ActiveXObject)(axs[i]);
+                return function () {
+                    if (ax) {
+                        var ax_ = ax;
+                        ax = null;
+                        return ax_;
+                    }
+                    else {
+                        return new(window.ActiveXObject)(axs[i]);
+                    }
+                };
+            }
+            catch (e) {}
+        }
+        throw new Error('ajax not supported in this browser')
+    }
+    else {
+        throw new Error('ajax not supported in this browser');
+    }
+})();
+;
+    }).call(module.exports);
+    
+    __require.modules["/node_modules/http-browserify/browser.js"]._cached = module.exports;
+    return module.exports;
+};
+
+require.modules["events"] = function () {
+    var module = { exports : {} };
+    var exports = module.exports;
+    var __dirname = ".";
+    var __filename = "events";
+    
+    var require = function (file) {
+        return __require(file, ".");
+    };
+    
+    require.resolve = function (file) {
+        return __require.resolve(name, ".");
+    };
+    
+    require.modules = __require.modules;
+    __require.modules["events"]._cached = module.exports;
+    
+    (function () {
+        if (!process.EventEmitter) process.EventEmitter = function () {};
+
+var EventEmitter = exports.EventEmitter = process.EventEmitter;
+var isArray = Array.isArray;
+
+// By default EventEmitters will print a warning if more than
+// 10 listeners are added to it. This is a useful default which
+// helps finding memory leaks.
+//
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+var defaultMaxListeners = 10;
+EventEmitter.prototype.setMaxListeners = function(n) {
+  if (!this._events) this._events = {};
+  this._events.maxListeners = n;
+};
+
+
+EventEmitter.prototype.emit = function(type) {
+  // If there is no 'error' event listener then throw.
+  if (type === 'error') {
+    if (!this._events || !this._events.error ||
+        (isArray(this._events.error) && !this._events.error.length))
+    {
+      if (arguments[1] instanceof Error) {
+        throw arguments[1]; // Unhandled 'error' event
+      } else {
+        throw new Error("Uncaught, unspecified 'error' event.");
+      }
+      return false;
+    }
+  }
+
+  if (!this._events) return false;
+  var handler = this._events[type];
+  if (!handler) return false;
+
+  if (typeof handler == 'function') {
+    switch (arguments.length) {
+      // fast cases
+      case 1:
+        handler.call(this);
+        break;
+      case 2:
+        handler.call(this, arguments[1]);
+        break;
+      case 3:
+        handler.call(this, arguments[1], arguments[2]);
+        break;
+      // slower
+      default:
+        var args = Array.prototype.slice.call(arguments, 1);
+        handler.apply(this, args);
+    }
+    return true;
+
+  } else if (isArray(handler)) {
+    var args = Array.prototype.slice.call(arguments, 1);
+
+    var listeners = handler.slice();
+    for (var i = 0, l = listeners.length; i < l; i++) {
+      listeners[i].apply(this, args);
+    }
+    return true;
+
+  } else {
+    return false;
+  }
+};
+
+// EventEmitter is defined in src/node_events.cc
+// EventEmitter.prototype.emit() is also defined there.
+EventEmitter.prototype.addListener = function(type, listener) {
+  if ('function' !== typeof listener) {
+    throw new Error('addListener only takes instances of Function');
+  }
+
+  if (!this._events) this._events = {};
+
+  // To avoid recursion in the case that type == "newListeners"! Before
+  // adding it to the listeners, first emit "newListeners".
+  this.emit('newListener', type, listener);
+
+  if (!this._events[type]) {
+    // Optimize the case of one listener. Don't need the extra array object.
+    this._events[type] = listener;
+  } else if (isArray(this._events[type])) {
+
+    // Check for listener leak
+    if (!this._events[type].warned) {
+      var m;
+      if (this._events.maxListeners !== undefined) {
+        m = this._events.maxListeners;
+      } else {
+        m = defaultMaxListeners;
+      }
+
+      if (m && m > 0 && this._events[type].length > m) {
+        this._events[type].warned = true;
+        console.error('(node) warning: possible EventEmitter memory ' +
+                      'leak detected. %d listeners added. ' +
+                      'Use emitter.setMaxListeners() to increase limit.',
+                      this._events[type].length);
+        console.trace();
+      }
+    }
+
+    // If we've already got an array, just append.
+    this._events[type].push(listener);
+  } else {
+    // Adding the second element, need to change to array.
+    this._events[type] = [this._events[type], listener];
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.once = function(type, listener) {
+  var self = this;
+  self.on(type, function g() {
+    self.removeListener(type, g);
+    listener.apply(this, arguments);
+  });
+
+  return this;
+};
+
+EventEmitter.prototype.removeListener = function(type, listener) {
+  if ('function' !== typeof listener) {
+    throw new Error('removeListener only takes instances of Function');
+  }
+
+  // does not use listeners(), so no side effect of creating _events[type]
+  if (!this._events || !this._events[type]) return this;
+
+  var list = this._events[type];
+
+  if (isArray(list)) {
+    var i = list.indexOf(listener);
+    if (i < 0) return this;
+    list.splice(i, 1);
+    if (list.length == 0)
+      delete this._events[type];
+  } else if (this._events[type] === listener) {
+    delete this._events[type];
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.removeAllListeners = function(type) {
+  // does not use listeners(), so no side effect of creating _events[type]
+  if (type && this._events && this._events[type]) this._events[type] = null;
+  return this;
+};
+
+EventEmitter.prototype.listeners = function(type) {
+  if (!this._events) this._events = {};
+  if (!this._events[type]) this._events[type] = [];
+  if (!isArray(this._events[type])) {
+    this._events[type] = [this._events[type]];
+  }
+  return this._events[type];
+};
+;
+    }).call(module.exports);
+    
+    __require.modules["events"]._cached = module.exports;
+    return module.exports;
+};
+
+require.modules["/node_modules/http-browserify/lib/request.js"] = function () {
+    var module = { exports : {} };
+    var exports = module.exports;
+    var __dirname = "/node_modules/http-browserify/lib";
+    var __filename = "/node_modules/http-browserify/lib/request.js";
+    
+    var require = function (file) {
+        return __require(file, "/node_modules/http-browserify/lib");
+    };
+    
+    require.resolve = function (file) {
+        return __require.resolve(name, "/node_modules/http-browserify/lib");
+    };
+    
+    require.modules = __require.modules;
+    __require.modules["/node_modules/http-browserify/lib/request.js"]._cached = module.exports;
+    
+    (function () {
+        var EventEmitter = require('events').EventEmitter;
+var Response = require('./response');
+
+var Request = module.exports = function (xhr, params) {
+    var self = this;
+    self.xhr = xhr;
+    self.body = '';
+    
+    var uri = params.host + ':' + params.port + (params.path || '/');
+    
+    if (params.headers) {
+        Object.keys(params.headers).forEach(function (key) {
+            var value = params.headers[key];
+            if (Array.isArray(value)) {
+                value.forEach(function (v) {
+                    xhr.setRequestHeader(key, v);
+                });
+            }
+            else xhr.setRequestHeader(key, value)
+        });
+    }
+    
+    xhr.open(params.method || 'GET', 'http://' + uri, true);
+    
+    var res = new Response;
+    res.on('ready', function () {
+        self.emit('response', res);
+    });
+    
+    xhr.onreadystatechange = function () {
+        res.handle(xhr);
+    };
+};
+
+Request.prototype = new EventEmitter;
+
+Request.prototype.setHeader = function (key, value) {
+    if ((Array.isArray && Array.isArray(value))
+    || value instanceof Array) {
+        for (var i = 0; i < value.length; i++) {
+            this.xhr.setRequestHeader(key, value[i]);
+        }
+    }
+    else {
+        this.xhr.setRequestHeader(key, value);
+    }
+};
+
+Request.prototype.write = function (s) {
+    this.body += s;
+};
+
+Request.prototype.end = function (s) {
+    if (s !== undefined) this.write(s);
+    this.xhr.send(this.body);
+};
+;
+    }).call(module.exports);
+    
+    __require.modules["/node_modules/http-browserify/lib/request.js"]._cached = module.exports;
+    return module.exports;
+};
+
+require.modules["/node_modules/http-browserify/lib/response.js"] = function () {
+    var module = { exports : {} };
+    var exports = module.exports;
+    var __dirname = "/node_modules/http-browserify/lib";
+    var __filename = "/node_modules/http-browserify/lib/response.js";
+    
+    var require = function (file) {
+        return __require(file, "/node_modules/http-browserify/lib");
+    };
+    
+    require.resolve = function (file) {
+        return __require.resolve(name, "/node_modules/http-browserify/lib");
+    };
+    
+    require.modules = __require.modules;
+    __require.modules["/node_modules/http-browserify/lib/response.js"]._cached = module.exports;
+    
+    (function () {
+        var EventEmitter = require('events').EventEmitter;
+
+var Response = module.exports = function (res) {
+    this.offset = 0;
+};
+
+Response.prototype = new EventEmitter;
+
+var capable = {
+    streaming : true,
+    status2 : true
+};
+
+function parseHeaders (res) {
+    var lines = res.getAllResponseHeaders().split(/\r?\n/);
+    var headers = {};
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        if (line === '') continue;
+        
+        var m = line.match(/^([^:]+):\s*(.*)/);
+        if (m) {
+            var key = m[1].toLowerCase(), value = m[2];
+            
+            if (headers[key] !== undefined) {
+                if ((Array.isArray && Array.isArray(headers[key]))
+                || headers[key] instanceof Array) {
+                    headers[key].push(value);
+                }
+                else {
+                    headers[key] = [ headers[key], value ];
+                }
+            }
+            else {
+                headers[key] = value;
+            }
+        }
+        else {
+            headers[line] = true;
+        }
+    }
+    return headers;
+}
+
+Response.prototype.getHeader = function (key) {
+    return this.headers[key.toLowerCase()];
+};
+
+Response.prototype.handle = function (res) {
+    if (res.readyState === 2 && capable.status2) {
+        try {
+            this.statusCode = res.status;
+            this.headers = parseHeaders(res);
+        }
+        catch (err) {
+            capable.status2 = false;
+        }
+        
+        if (capable.status2) {
+            this.emit('ready');
+        }
+    }
+    else if (capable.streaming && res.readyState === 3) {
+        try {
+            if (!this.statusCode) {
+                this.statusCode = res.status;
+                this.headers = parseHeaders(res);
+                this.emit('ready');
+            }
+        }
+        catch (err) {}
+        
+        try {
+            this.write(res);
+        }
+        catch (err) {
+            capable.streaming = false;
+        }
+    }
+    else if (res.readyState === 4) {
+        if (!this.statusCode) {
+            this.statusCode = res.status;
+            this.emit('ready');
+        }
+        this.write(res);
+        
+        if (res.error) {
+            this.emit('error', res.responseText);
+        }
+        else this.emit('end');
+    }
+};
+
+Response.prototype.write = function (res) {
+    if (res.responseText.length > this.offset) {
+        this.emit('data', res.responseText.slice(this.offset));
+        this.offset = res.responseText.length;
+    }
+};
+;
+    }).call(module.exports);
+    
+    __require.modules["/node_modules/http-browserify/lib/response.js"]._cached = module.exports;
+    return module.exports;
+};
+
 require.modules["/emission-estimate.js"] = function () {
     var module = { exports : {} };
     var exports = module.exports;
@@ -450,31 +952,7 @@ EmissionEstimator.events = {
     return module.exports;
 };
 
-require.modules["http"] = function () {
-    var module = { exports : {} };
-    var exports = module.exports;
-    var __dirname = ".";
-    var __filename = "http";
-    
-    var require = function (file) {
-        return __require(file, ".");
-    };
-    
-    require.resolve = function (file) {
-        return __require.resolve(name, ".");
-    };
-    
-    require.modules = __require.modules;
-    __require.modules["http"]._cached = module.exports;
-    
-    (function () {
-        // todo
-;
-    }).call(module.exports);
-    
-    __require.modules["http"]._cached = module.exports;
-    return module.exports;
-};
+require.alias("http-browserify", "/node_modules/http");
 
 process.nextTick(function () {
     var module = { exports : {} };
