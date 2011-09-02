@@ -913,8 +913,8 @@ EmissionEstimator.prototype.params = function() {
   return params;
 };
 
-EmissionEstimator.prototype.getEmissionEstimate = function(onSuccess, onError) {
-  var callback = EmissionEstimator.events.onEstimateSuccess(this.emitter, onSuccess);
+EmissionEstimator.prototype.getEmissionEstimate = function(callback) {
+  var emitter = this.emitter;
   var req = http.request({
     host: this.host, port: 80, path: this.path,
     method: 'POST',
@@ -925,25 +925,18 @@ EmissionEstimator.prototype.getEmissionEstimate = function(onSuccess, onError) {
       data += buf;
     });
 
-    res.on('error', onError);
+    res.on('error', function() {
+      var err = new Error('Failed to get emission estimate: ' + data);
+      callback(err);
+    });
 
     res.on('end', function () {
       var json = JSON.parse(data);
-      callback(json);
+      emitter.emissionEstimate.data = json;
+      callback(null, emitter.emissionEstimate);
     });
   });
   req.end(JSON.stringify(this.params()));
-};
-
-// Events
-
-EmissionEstimator.events = {
-  onEstimateSuccess: function(emitter, onSuccess) {
-    return function(result) {
-      emitter.emissionEstimate.data = result;
-      onSuccess(emitter.emissionEstimate);
-    };
-  }
 };
 ;
     }).call(module.exports);
@@ -989,8 +982,8 @@ CM1.emitter = function(klass, definition) {
 
     return this._emissionEstimator;
   };
-  klass.prototype.getEmissionEstimate = function(onSuccess, onError) {
-    return this.emissionEstimator().getEmissionEstimate(onSuccess, onError);
+  klass.prototype.getEmissionEstimate = function(callback) {
+    return this.emissionEstimator().getEmissionEstimate(callback);
   };
 };
 
