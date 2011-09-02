@@ -36,9 +36,6 @@ vows.describe('CM1').addBatch({
     'sets the type of emitter': function() {
       assert.equal(RentalCar.cm1.emitter_name, 'automobile');
     },
-    'creates an #emissionEstimate property on the target class': function(car) {
-      assert.isObject(car.emissionEstimate);
-    },
     'creates an #emissionEstimator method on the target class': function(car) {
       assert.isObject(car.emissionEstimator());
     },
