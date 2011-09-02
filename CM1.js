@@ -830,26 +830,25 @@ require.modules["/emission-estimate.js"] = function () {
     __require.modules["/emission-estimate.js"]._cached = module.exports;
     
     (function () {
-        var EmissionEstimate = module.exports = function() {};
-
-EmissionEstimate.prototype.value = function() {
-  if(this.data) {
-    return this.data.emission;
-  } else {
-    return 'No data';
-  }
+        var EmissionEstimate = module.exports = function(emitter, data) {
+  this.emitter = emitter;
+  this.data = data;
+  proxyDataProperties(this, data);
 };
 
-EmissionEstimate.prototype.methodology = function() {
-  if(this.data) {
-    return this.data.methodology;
-  } else {
-    return 'No data';
-  }
+EmissionEstimate.prototype.value = function() {
+  return this.data.emission;
 };
 
 EmissionEstimate.prototype.toString = function() {
   return this.value().toString();
+};
+
+var proxyDataProperties = function(estimate, data) {
+  for (var property in data) {
+    if (property == 'clone') continue;
+    estimate[property] = data[property];
+  }
 };
 ;
     }).call(module.exports);
@@ -877,6 +876,8 @@ require.modules["/emission-estimator.js"] = function () {
     
     (function () {
         var http = require('http');
+
+var EmissionEstimate = require('./emission-estimate');
 
 var EmissionEstimator = module.exports = function(emitter, cm1) {
   this.emitter = emitter;
@@ -932,7 +933,7 @@ EmissionEstimator.prototype.getEmissionEstimate = function(callback) {
 
     res.on('end', function () {
       var json = JSON.parse(data);
-      emitter.emissionEstimate.data = json;
+      emitter.emissionEstimate = new EmissionEstimate(emitter, json);
       callback(null, emitter.emissionEstimate);
     });
   });
@@ -974,7 +975,6 @@ CM1.prototype.key = function() {
 CM1.emitter = function(klass, definition) {
   klass.cm1 = new CM1();
   klass.cm1.define(definition);
-  klass.prototype.emissionEstimate = new EmissionEstimate();
   klass.prototype.emissionEstimator = function() {
     if(!this._emissionEstimator) {
       this._emissionEstimator = new EmissionEstimator(this, klass.cm1);
