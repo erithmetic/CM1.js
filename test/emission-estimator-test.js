@@ -46,10 +46,9 @@ vows.describe('EmissionEstimator').addBatch({
     },
 
     'calls the given onSuccess method with the emissionEstimate': function(car) {
-      var onSuccess = sinon.spy();
-      var onError = sinon.spy();
-      car.getEmissionEstimate(onSuccess, onError);
-      assert.ok(onSuccess.calledWith(car.emissionEstimate));
+      var callback = sinon.spy();
+      car.getEmissionEstimate(callback);
+      assert.ok(callback.calledWith(null, car.emissionEstimate));
     },
     "sets the data attribute on the emitter's EmissionEstimate": function(car) {
       var onSuccess = sinon.spy();

@@ -18,13 +18,14 @@ car.fuel_economy = 36.7;
 
 vows.describe('CM1').addBatch({
   'usage': {
-    'asynchronously calculates emissions for an emitter': function() {
-      var value;
-      car.getEmissionEstimate(function(estimate) {
-        value = estimate.value();
-      }, function() {});
+    topic: function() {
+      car.getEmissionEstimate(this.callback);
+    },
 
-      assert.equal(value, 3563.616916486099);
+    'asynchronously calculates emissions for an emitter': function(estimate) {
+      assert.equal(estimate.value(), 3563.616916486099);
+    },
+    "sets the emitter's emissionEstimate property": function(estimate) {
       assert.equal(car.emissionEstimate.value(), 3563.616916486099);
     }
   },
