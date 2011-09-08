@@ -917,7 +917,7 @@ EmissionEstimator.prototype.params = function() {
 EmissionEstimator.prototype.getEmissionEstimate = function(callback) {
   var emitter = this.emitter;
   var req = http.request({
-    host: this.host, port: 80, path: this.path,
+    host: this.host, port: 80, path: this.path(),
     method: 'POST',
     headers: { ContentType: 'application/json' }
   }, function (res) {
