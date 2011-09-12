@@ -42,19 +42,17 @@ vows.describe('EmissionEstimator').addBatch({
 
   '#getEmissionEstimate': {
     topic: function() {
-      return new RentalCar();
+      var car = new RentalCar();
+      car.getEmissionEstimate(this.callback);
     },
-
-    'calls the given onSuccess method with the emissionEstimate': function(car) {
-      var callback = sinon.spy();
-      car.getEmissionEstimate(callback);
-      assert.ok(callback.calledWith(null, car.emissionEstimate));
+    'sends a null err', function(err) {
+      assert.isNull(err);
     },
-    "sets the data attribute on the emitter's EmissionEstimate": function(car) {
-      var onSuccess = sinon.spy();
-      var onError = sinon.spy();
-      car.getEmissionEstimate(onSuccess, onError);
-      assert.deepEqual(car.emissionEstimate.data, Cm1Result.fit);
+    'calls the given onSuccess method with the emissionEstimate': function(err, estimate) {
+      assert.instanceOf(estimate, EmissionEstimate);
+    },
+    "sets the data attribute on the emitter's EmissionEstimate": function(err, estimate) {
+      assert.deepEqual(estimate.data, Cm1Result.fit);
     }
   },
 
