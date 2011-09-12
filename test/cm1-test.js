@@ -30,6 +30,15 @@ vows.describe('CM1').addBatch({
     }
   },
 
+  '.key': {
+    'uses process.env.CM1_KEY if available': function() {
+      CM1.key = null;
+      process.env.CM1_KEY = 'ABC123';
+      assert.equal(RentalCar.cm1.key(), 'ABC123');
+      delete process.env.CM1_KEY;
+    }
+  },
+
   '.emitter': {
     topic: new RentalCar(),
 
