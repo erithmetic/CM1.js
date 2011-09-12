@@ -38,6 +38,10 @@ vows.describe('EmissionEstimator').addBatch({
       CM1.key = 'abc123';
       assert.deepEqual(estimator.params().key, 'abc123');
       CM1.key = null;
+    },
+    'includes any emitter#parameters if defined': function(estimator) {
+      estimator.emitter.parameters = { fuel_economy: 2.3 };
+      assert.equal(estimator.params().fuel_economy, 2.3);
     }
   },
 
