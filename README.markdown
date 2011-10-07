@@ -7,7 +7,7 @@ Carbon, energy, and other sustainability calculations for your JavaScripts. Buil
 You can turn any object into a carbon calculating machine. For example, let's say we have an object representing a rental car:
 
 
-    RentalCar = function() {};
+    var RentalCar = function() {};
     
     var car = new RentalCar();
     car.make = 'Honda';
@@ -18,7 +18,7 @@ Now we want to figure out how much CO2 it emits. CM1.js will add carbon calculat
 
     var CM1 = require('cm1');  //this works in Node.js and all browsers since CM1.js is packaged with browserify
     
-    RentalCar = function() {};
+    var RentalCar = function() {};
     
     CM1.emitter(RentalCar, function(emitter) {
       emitter.emitAs('automobile');
