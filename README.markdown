@@ -34,7 +34,7 @@ Now, we can calculate emissions:
     car.model = 'Fit';
     car.fuel_economy = 36.7;
 
-    car.getEmissionEstimate(function(estimate) {
+    car.getEmissionEstimate(function(err, estimate) {
       alert("My emissions are: " + estimate.value());
     });
 
