@@ -55,4 +55,4 @@ Note: if using the stand-alone library, `process.env` won't be available in your
 
 ## Deploy With Browserify
 
-CM1.js can be used with [browserify](http://github.com/substack/browserify). Simply `npm install CM1` and `require('CM1')` in your code.
+CM1.js can be used with [browserify](http://github.com/substack/node-browserify). Simply `npm install CM1` and `require('CM1')` in your code.
