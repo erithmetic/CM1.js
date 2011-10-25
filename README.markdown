@@ -21,7 +21,7 @@ Now we want to figure out how much CO2 it emits. CM1.js will add impact calculat
     Carbon.extend(RentalCar, {
       model: 'automobile',
       provides: ['make', 'model', {
-        'fuelEconomy': 'fuel_efficiency'
+        'fuel_efficiency': 'fuelEconomy'
       }
     });
 
