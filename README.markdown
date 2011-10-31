@@ -4,7 +4,24 @@ Carbon, energy, and other environmental impact calculations for your JavaScript 
 
 ## Usage
 
-You can turn any object into an impact calculating machine. For example, let's say we have an object representing a rental car:
+For a quick, one-off calculation, you can use CM1.impacts. Here's an example for a flight:
+
+    var CM1 = require('cm1');
+    CM1.impacts('flight', {
+      origin_airport: 'IAD',
+      destination_airport: 'PDX',
+      airline: 'United',
+      trips: 2,
+      segments_per_trip: 1    // nonstop flight
+    },
+    function(err, impacts) {
+      if(err) return console.log('Argh, falied!', err);
+
+      console.log('Carbon for my cross-country flight: ', impacts.carbon);
+      console.log('Methodology: ', impacts.methodology);
+    });
+
+You can also turn any object into an impact calculating machine. For example, let's say we have an object representing a rental car:
 
 
     var RentalCar = function() {};
@@ -39,6 +56,26 @@ Now, we can calculate impacts:
  
       alert("My emissions are: " + impacts.carbon);
       alert("My fuel use is: " + impacts.fuelUse);
+    });
+
+
+If you don't want to mess around with prototypes, CM1.model gives you an object that you can define and run calculations on at a later time:
+
+    var CM1 = require('cm1');
+    var model = CM1.model('flight', {
+      origin_airport: 'JFK',
+      destination_airport: 'Berlin',
+      airline: 'Luftansa'
+    });
+
+    // later...
+    model.seat_class = 'Business';
+
+    model.getImpacts(function(err, impacts) {
+      if(err) return console.log('Argh, falied!', err);
+
+      console.log('Carbon for my international flight: ', impacts.carbon);
+      console.log('Methodology: ', impacts.methodology);
     });
 
 There are a whole bunch of [other models](http://carbon.brighterplanet.com/models) available, including computer usage, rail trips, and flights.
