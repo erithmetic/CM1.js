@@ -964,14 +964,14 @@ CM1.prototype.underscore = function(string) {
 CM1.model = function(type, properties) {
   var attributes = Object.keys(properties);
 
-  var prototype = function() {};
-  CM1.extend(prototype, {
+  var proto = function() {};
+  CM1.extend(proto, {
     model: type,
     provides: attributes
   });
 
-  var object = new prototype;
-  for(var i in attributes) {
+  var object = new proto();
+  for(var i = 0; i < attributes.length; i++) {
     var attribute = attributes[i];
     object[attribute] = properties[attribute];
   }
