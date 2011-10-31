@@ -18,15 +18,32 @@ car.fuelEconomy = 36.7;
 
 vows.describe('CM1').addBatch({
   'usage': {
-    topic: function() {
-      car.getImpacts(this.callback);
+    'standard': {
+      topic: function() {
+        car.getImpacts(this.callback);
+      },
+
+      'asynchronously calculates emissions for an emitter': function(err, impacts) {
+        assert.equal(impacts.carbon, 3362.979842566016);
+      },
+      "sets the emitter's impacts property": function() {
+        assert.equal(car.impacts.carbon, 3362.979842566016);
+      }
     },
 
-    'asynchronously calculates emissions for an emitter': function(err, impacts) {
-      assert.equal(impacts.carbon, 3362.979842566016);
+    'allows for quick model building': function() {
+      var model = CM1.model('flight', {
+        origin_airport: 'ORD', destination_airport: 'LGA'
+      });
+      assert.isFunction(model.getImpacts);
     },
-    "sets the emitter's impacts property": function() {
-      assert.equal(car.impacts.carbon, 3362.979842566016);
+
+    'allows for one-off calculations': function() {
+      var callback = sinon.spy();
+      var impacts = CM1.impacts('automobile', {
+        make: 'Nissan', model: 'Versa'
+      }, callback);
+      assert.isTrue(callback.called);
     }
   },
 

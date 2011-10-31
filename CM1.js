@@ -310,59 +310,59 @@ exports.extname = function(path) {
     return module.exports;
 };
 
-require.modules["/node_modules/http-browserify/package.json"] = function () {
+require.modules["/node_modules/dkastner-http-browserify/package.json"] = function () {
     var module = { exports : {} };
     var exports = module.exports;
-    var __dirname = "/node_modules/http-browserify";
-    var __filename = "/node_modules/http-browserify/package.json";
+    var __dirname = "/node_modules/dkastner-http-browserify";
+    var __filename = "/node_modules/dkastner-http-browserify/package.json";
     
     var require = function (file) {
-        return __require(file, "/node_modules/http-browserify");
+        return __require(file, "/node_modules/dkastner-http-browserify");
     };
     
     require.resolve = function (file) {
-        return __require.resolve(name, "/node_modules/http-browserify");
+        return __require.resolve(name, "/node_modules/dkastner-http-browserify");
     };
     
     require.modules = __require.modules;
-    __require.modules["/node_modules/http-browserify/package.json"]._cached = module.exports;
+    __require.modules["/node_modules/dkastner-http-browserify/package.json"]._cached = module.exports;
     
     (function () {
-        module.exports = {"name":"http-browserify","version":"0.0.0","description":"http module compatability for browserify","main":"index.js","browserify":"browser.js","directories":{"lib":".","example":"example","test":"test"},"devDependencies":{"express":"2.4.x","browserify":"1.4.x"},"repository":{"type":"git","url":"http://github.com/substack/http-browserify.git"},"keywords":["http","browserify","compatible","meatless","browser"],"author":{"name":"James Halliday","email":"mail@substack.net","url":"http://substack.net"},"license":"MIT/X11","engine":{"node":">=0.4"}};
+        module.exports = {"name":"dkastner-http-browserify","version":"0.0.4","description":"http module compatability for browserify","main":"index.js","browserify":"browser.js","directories":{"lib":".","example":"example","test":"test"},"devDependencies":{"express":"2.4.x","browserify":"1.4.x","sinon":"*","vows":"*"},"repository":{"type":"git","url":"http://github.com/substack/http-browserify.git"},"keywords":["http","browserify","compatible","meatless","browser"],"author":{"name":"James Halliday","email":"mail@substack.net","url":"http://substack.net"},"contributors":[{"name":"Derek Kastner","email":"dkastner@gmail.com"}],"license":"MIT/X11","engine":{"node":">=0.4"}};
     }).call(module.exports);
     
-    __require.modules["/node_modules/http-browserify/package.json"]._cached = module.exports;
+    __require.modules["/node_modules/dkastner-http-browserify/package.json"]._cached = module.exports;
     return module.exports;
 };
 
-require.modules["/node_modules/http-browserify/browser.js"] = function () {
+require.modules["/node_modules/dkastner-http-browserify/browser.js"] = function () {
     var module = { exports : {} };
     var exports = module.exports;
-    var __dirname = "/node_modules/http-browserify";
-    var __filename = "/node_modules/http-browserify/browser.js";
+    var __dirname = "/node_modules/dkastner-http-browserify";
+    var __filename = "/node_modules/dkastner-http-browserify/browser.js";
     
     var require = function (file) {
-        return __require(file, "/node_modules/http-browserify");
+        return __require(file, "/node_modules/dkastner-http-browserify");
     };
     
     require.resolve = function (file) {
-        return __require.resolve(name, "/node_modules/http-browserify");
+        return __require.resolve(name, "/node_modules/dkastner-http-browserify");
     };
     
     require.modules = __require.modules;
-    __require.modules["/node_modules/http-browserify/browser.js"]._cached = module.exports;
+    __require.modules["/node_modules/dkastner-http-browserify/browser.js"]._cached = module.exports;
     
     (function () {
         var http = module.exports;
 var EventEmitter = require('events').EventEmitter;
 var Request = require('./lib/request');
 
+if (typeof window === 'undefined') {
+    throw new Error('no window object present');
+}
+
 http.request = function (params, cb) {
-    if (!params) params = {};
-    if (!params.host) params.host = window.location.host.split(':')[0];
-    if (!params.port) params.port = window.location.port;
-    
-    var req = new Request(new xhrHttp, params);
+    var req = Request.create(params);
     if (cb) req.on('response', cb);
     return req;
 };
@@ -373,46 +373,10 @@ http.get = function (params, cb) {
     req.end();
     return req;
 };
-
-var xhrHttp = (function () {
-    if (typeof window === 'undefined') {
-        throw new Error('no window object present');
-    }
-    else if (window.XMLHttpRequest) {
-        return window.XMLHttpRequest;
-    }
-    else if (window.ActiveXObject) {
-        var axs = [
-            'Msxml2.XMLHTTP.6.0',
-            'Msxml2.XMLHTTP.3.0',
-            'Microsoft.XMLHTTP'
-        ];
-        for (var i = 0; i < axs.length; i++) {
-            try {
-                var ax = new(window.ActiveXObject)(axs[i]);
-                return function () {
-                    if (ax) {
-                        var ax_ = ax;
-                        ax = null;
-                        return ax_;
-                    }
-                    else {
-                        return new(window.ActiveXObject)(axs[i]);
-                    }
-                };
-            }
-            catch (e) {}
-        }
-        throw new Error('ajax not supported in this browser')
-    }
-    else {
-        throw new Error('ajax not supported in this browser');
-    }
-})();
 ;
     }).call(module.exports);
     
-    __require.modules["/node_modules/http-browserify/browser.js"]._cached = module.exports;
+    __require.modules["/node_modules/dkastner-http-browserify/browser.js"]._cached = module.exports;
     return module.exports;
 };
 
@@ -607,59 +571,54 @@ EventEmitter.prototype.listeners = function(type) {
     return module.exports;
 };
 
-require.modules["/node_modules/http-browserify/lib/request.js"] = function () {
+require.modules["/node_modules/dkastner-http-browserify/lib/request.js"] = function () {
     var module = { exports : {} };
     var exports = module.exports;
-    var __dirname = "/node_modules/http-browserify/lib";
-    var __filename = "/node_modules/http-browserify/lib/request.js";
+    var __dirname = "/node_modules/dkastner-http-browserify/lib";
+    var __filename = "/node_modules/dkastner-http-browserify/lib/request.js";
     
     var require = function (file) {
-        return __require(file, "/node_modules/http-browserify/lib");
+        return __require(file, "/node_modules/dkastner-http-browserify/lib");
     };
     
     require.resolve = function (file) {
-        return __require.resolve(name, "/node_modules/http-browserify/lib");
+        return __require.resolve(name, "/node_modules/dkastner-http-browserify/lib");
     };
     
     require.modules = __require.modules;
-    __require.modules["/node_modules/http-browserify/lib/request.js"]._cached = module.exports;
+    __require.modules["/node_modules/dkastner-http-browserify/lib/request.js"]._cached = module.exports;
     
     (function () {
         var EventEmitter = require('events').EventEmitter;
 var Response = require('./response');
 
-var Request = module.exports = function (xhr, params) {
-    var self = this;
-    self.xhr = xhr;
-    self.body = '';
-    
-    var uri = params.host + ':' + params.port + (params.path || '/');
-    
-    if (params.headers) {
-        Object.keys(params.headers).forEach(function (key) {
-            var value = params.headers[key];
-            if (Array.isArray(value)) {
-                value.forEach(function (v) {
-                    xhr.setRequestHeader(key, v);
-                });
-            }
-            else xhr.setRequestHeader(key, value)
-        });
-    }
-    
-    xhr.open(params.method || 'GET', 'http://' + uri, true);
-    
-    var res = new Response;
-    res.on('ready', function () {
-        self.emit('response', res);
-    });
-    
-    xhr.onreadystatechange = function () {
-        res.handle(xhr);
-    };
-};
+var Request = module.exports = function() {};
 
 Request.prototype = new EventEmitter;
+
+Request.create = function(params) {
+    if (!params) params = {};
+
+    var req;
+    if(params.host && window.XDomainRequest) { // M$ IE XDR - use when host is set and XDR present
+      req = new XdrRequest(params);
+    } else {                                   // Everybody else
+      req = new XhrRequest(params);
+    }
+    return req;
+}
+
+Request.prototype.init = function(params) {
+    if (!params.host) params.host = window.location.host.split(':')[0];
+    if (!params.port) params.port = window.location.port;
+    
+    this.body = '';
+    if(!/^\//.test(params.path)) params.path = '/' + params.path;
+    this.uri = params.host + ':' + params.port + (params.path || '/');
+    this.xhr = new this.xhrClass;
+
+    this.xhr.open(params.method || 'GET', 'http://' + this.uri, true);
+};
 
 Request.prototype.setHeader = function (key, value) {
     if ((Array.isArray && Array.isArray(value))
@@ -681,29 +640,145 @@ Request.prototype.end = function (s) {
     if (s !== undefined) this.write(s);
     this.xhr.send(this.body);
 };
+
+
+// XhrRequest
+
+var XhrRequest = function(params) {
+    var self = this;
+    self.init(params);
+    var xhr = this.xhr;
+    
+    if(params.headers) {
+        Object.keys(params.headers).forEach(function (key) {
+            var value = params.headers[key];
+            if (Array.isArray(value)) {
+                value.forEach(function (v) {
+                    xhr.setRequestHeader(key, v);
+                });
+            }
+            else xhr.setRequestHeader(key, value)
+        });
+    }
+  
+    xhr.onreadystatechange = function () {
+        res.handle(xhr);
+    };
+    
+    var res = new Response;
+    res.on('ready', function () {
+        self.emit('response', res);
+    });
+};
+
+XhrRequest.prototype = new Request;
+
+XhrRequest.prototype.xhrClass = function() {
+    if (window.XMLHttpRequest) {
+        return window.XMLHttpRequest;
+    }
+    else if (window.ActiveXObject) {
+        var axs = [
+            'Msxml2.XMLHTTP.6.0',
+            'Msxml2.XMLHTTP.3.0',
+            'Microsoft.XMLHTTP'
+        ];
+        for (var i = 0; i < axs.length; i++) {
+            try {
+                var ax = new(window.ActiveXObject)(axs[i]);
+                return function () {
+                    if (ax) {
+                        var ax_ = ax;
+                        ax = null;
+                        return ax_;
+                    }
+                    else {
+                        return new(window.ActiveXObject)(axs[i]);
+                    }
+                };
+            }
+            catch (e) {}
+        }
+        throw new Error('ajax not supported in this browser')
+    }
+    else {
+        throw new Error('ajax not supported in this browser');
+    }
+}();
+
+
+
+// XdrRequest
+
+var XdrRequest = function(params) {
+    var self = this;
+    self.init(params);
+    var xhr = this.xhr;
+
+    self.headers = {};
+
+    var res = new XdrResponse();
+
+    xhr.onprogress = function() {
+        xhr.readyState = 2;
+        res.contentType = xhr.contentType; // There, that's all the headers you get
+        res.handle(xhr);
+    }
+    xhr.onerror = function() {
+        xhr.readyState = 3;
+        xhr.error = "Who the fuck knows? IE doesn't care!";
+        res.handle(xhr);
+    };
+    xhr.onload = function() {
+        xhr.readyState = 4;
+        res.handle(xhr);
+    };
+
+    res.on('ready', function () {
+        self.emit('response', res);
+    });
+};
+
+XdrRequest.prototype = new Request;
+
+XdrRequest.prototype.xhrClass = window.XDomainRequest;
+
+
+
+// XdrResponse
+
+var XdrResponse = function() {
+    this.offset = 0;
+};
+
+XdrResponse.prototype = new Response();
+
+XdrResponse.prototype.getAllResponseHeaders = function() {
+  return 'Content-Type: ' + this.contentType;
+};
 ;
     }).call(module.exports);
     
-    __require.modules["/node_modules/http-browserify/lib/request.js"]._cached = module.exports;
+    __require.modules["/node_modules/dkastner-http-browserify/lib/request.js"]._cached = module.exports;
     return module.exports;
 };
 
-require.modules["/node_modules/http-browserify/lib/response.js"] = function () {
+require.modules["/node_modules/dkastner-http-browserify/lib/response.js"] = function () {
     var module = { exports : {} };
     var exports = module.exports;
-    var __dirname = "/node_modules/http-browserify/lib";
-    var __filename = "/node_modules/http-browserify/lib/response.js";
+    var __dirname = "/node_modules/dkastner-http-browserify/lib";
+    var __filename = "/node_modules/dkastner-http-browserify/lib/response.js";
     
     var require = function (file) {
-        return __require(file, "/node_modules/http-browserify/lib");
+        return __require(file, "/node_modules/dkastner-http-browserify/lib");
     };
     
     require.resolve = function (file) {
-        return __require.resolve(name, "/node_modules/http-browserify/lib");
+        return __require.resolve(name, "/node_modules/dkastner-http-browserify/lib");
     };
     
     require.modules = __require.modules;
-    __require.modules["/node_modules/http-browserify/lib/response.js"]._cached = module.exports;
+    __require.modules["/node_modules/dkastner-http-browserify/lib/response.js"]._cached = module.exports;
     
     (function () {
         var EventEmitter = require('events').EventEmitter;
@@ -808,101 +883,199 @@ Response.prototype.write = function (res) {
 ;
     }).call(module.exports);
     
-    __require.modules["/node_modules/http-browserify/lib/response.js"]._cached = module.exports;
+    __require.modules["/node_modules/dkastner-http-browserify/lib/response.js"]._cached = module.exports;
     return module.exports;
 };
 
-require.modules["/emission-estimate.js"] = function () {
+require.modules["/lib/CM1.js"] = function () {
     var module = { exports : {} };
     var exports = module.exports;
-    var __dirname = "/";
-    var __filename = "/emission-estimate.js";
+    var __dirname = "/lib";
+    var __filename = "/lib/CM1.js";
     
     var require = function (file) {
-        return __require(file, "/");
+        return __require(file, "/lib");
     };
     
     require.resolve = function (file) {
-        return __require.resolve(name, "/");
+        return __require.resolve(name, "/lib");
     };
     
     require.modules = __require.modules;
-    __require.modules["/emission-estimate.js"]._cached = module.exports;
+    __require.modules["/lib/CM1.js"]._cached = module.exports;
     
     (function () {
-        var EmissionEstimate = module.exports = function(emitter, data) {
-  this.emitter = emitter;
+        var ImpactEstimate = require('./impact-estimate'),
+  ImpactEstimator = require('./impact-estimator');
+
+var CM1 = module.exports = function() {
+  this.attributeMap = {};
+};
+CM1.ImpactEstimate = ImpactEstimate;
+CM1.ImpactEstimator = ImpactEstimator;
+
+CM1.prototype.key = function() {
+  if(process && process.env && process.env.CM1_KEY)
+    return process.env.CM1_KEY;
+  else
+    return CM1.key;
+};
+
+CM1.extend = function(klass, mapping) {
+  klass.cm1 = new CM1();
+  klass.cm1.define(mapping);
+  klass.prototype.impactEstimator = new ImpactEstimator(klass.cm1);
+  klass.prototype.getImpacts = function(callback) {
+    return this.impactEstimator.getImpacts(this, callback);
+  };
+};
+
+CM1.prototype.define = function(mapping) {
+  this.emitAs(mapping.model);
+  var provisions = mapping.provide || mapping.provides;
+  this.provide(provisions);
+};
+
+CM1.prototype.emitAs = function(model) {
+  this.model = model;
+};
+
+CM1.prototype.provide = function(attributes) {
+  for(var i in attributes) {
+    if(attributes.hasOwnProperty(i)) {
+      var value = attributes[i];
+      if(typeof value == 'object') {
+        this.provide(value);
+      } else if(/^\d+$/.test(i)) {
+        this.attributeMap[this.underscore(value)] = value;
+      } else {
+        this.attributeMap[this.underscore(i)] = value;
+      }
+    }
+  }
+};
+
+CM1.prototype.underscore = function(string) {
+  return string.replace(/([a-z])([A-Z])/g, function(str, first, second) {
+    return first + '_' + second.toLowerCase();
+  });
+};
+
+CM1.model = function(type, properties) {
+  var attributes = Object.keys(properties);
+
+  var prototype = function() {};
+  CM1.extend(prototype, {
+    model: type,
+    provides: attributes
+  });
+
+  var object = new prototype;
+  for(var i in attributes) {
+    var attribute = attributes[i];
+    object[attribute] = properties[attribute];
+  }
+
+  return object;
+};
+
+CM1.impacts = function(type, properties, callback) {
+  var model = CM1.model(type, properties);
+  model.getImpacts(callback);
+};
+;
+    }).call(module.exports);
+    
+    __require.modules["/lib/CM1.js"]._cached = module.exports;
+    return module.exports;
+};
+
+require.modules["/lib/impact-estimate.js"] = function () {
+    var module = { exports : {} };
+    var exports = module.exports;
+    var __dirname = "/lib";
+    var __filename = "/lib/impact-estimate.js";
+    
+    var require = function (file) {
+        return __require(file, "/lib");
+    };
+    
+    require.resolve = function (file) {
+        return __require.resolve(name, "/lib");
+    };
+    
+    require.modules = __require.modules;
+    __require.modules["/lib/impact-estimate.js"]._cached = module.exports;
+    
+    (function () {
+        var ImpactEstimate = module.exports = function(subject, data) {
+  this.subject = subject;
   this.data = data;
+
+  if(data.decisions.carbon)
+    this.carbon = data.decisions.carbon.object.value;
   proxyDataProperties(this, data);
-};
-
-EmissionEstimate.prototype.value = function() {
-  return this.data.emission;
-};
-
-EmissionEstimate.prototype.toString = function() {
-  return this.value().toString();
 };
 
 var proxyDataProperties = function(estimate, data) {
   for (var property in data) {
-    if (property == 'clone') continue;
+    if(!data.hasOwnProperty(property)) continue;
+
     estimate[property] = data[property];
   }
 };
 ;
     }).call(module.exports);
     
-    __require.modules["/emission-estimate.js"]._cached = module.exports;
+    __require.modules["/lib/impact-estimate.js"]._cached = module.exports;
     return module.exports;
 };
 
-require.modules["/emission-estimator.js"] = function () {
+require.modules["/lib/impact-estimator.js"] = function () {
     var module = { exports : {} };
     var exports = module.exports;
-    var __dirname = "/";
-    var __filename = "/emission-estimator.js";
+    var __dirname = "/lib";
+    var __filename = "/lib/impact-estimator.js";
     
     var require = function (file) {
-        return __require(file, "/");
+        return __require(file, "/lib");
     };
     
     require.resolve = function (file) {
-        return __require.resolve(name, "/");
+        return __require.resolve(name, "/lib");
     };
     
     require.modules = __require.modules;
-    __require.modules["/emission-estimator.js"]._cached = module.exports;
+    __require.modules["/lib/impact-estimator.js"]._cached = module.exports;
     
     (function () {
         var http = require('http');
 
-var EmissionEstimate = require('./emission-estimate');
+var ImpactEstimate = require('./impact-estimate');
 
-var EmissionEstimator = module.exports = function(emitter, cm1) {
-  this.emitter = emitter;
+var ImpactEstimator = module.exports = function(cm1) {
   this.cm1 = cm1;
-  this.host = 'carbon.brighterplanet.com';
+  this.host = 'impact.brighterplanet.com';
 };
 
-EmissionEstimator.prototype.pluralize = function(str) {
+ImpactEstimator.prototype.pluralize = function(str) {
   return str + 's';
 }
 
-EmissionEstimator.prototype.path = function() {
-  return this.pluralize(this.cm1.emitter_name) + '.json';
+ImpactEstimator.prototype.path = function() {
+  return this.pluralize(this.cm1.model) + '.json';
 };
 
-EmissionEstimator.prototype.params = function() {
+ImpactEstimator.prototype.params = function(subject) {
   var params = {};
-  for(var attribute in this.cm1.attribute_map) {
-    var cm1_field = this.cm1.attribute_map[attribute];
-    var value = this.emitter[attribute];
-    var result;
-    if(value) 
+  for(var cm1_field in this.cm1.attributeMap) {
+    var attribute = this.cm1.attributeMap[cm1_field];
+    var value = subject[attribute];
+    var result = null;
+    if(value)
       result = value;
     if(typeof result == 'function')
-      result = result.apply(this.emitter);
+      result = result.apply(subject);
     if(result)
       params[cm1_field] = result;
   }
@@ -911,15 +1084,21 @@ EmissionEstimator.prototype.params = function() {
     params.key = this.cm1.key();
   }
 
+  if(subject.parameters) {
+    for(var i in subject.parameters) {
+      params[i] = subject.parameters[i];
+    }
+  }
+
   return params;
 };
 
-EmissionEstimator.prototype.getEmissionEstimate = function(callback) {
-  var emitter = this.emitter;
+ImpactEstimator.prototype.getImpacts = function(subject, callback) {
+  this.subject = subject;
   var req = http.request({
     host: this.host, port: 80, path: this.path(),
     method: 'POST',
-    headers: { ContentType: 'application/json' }
+    headers: { 'Content-Type': 'application/json' }
   }, function (res) {
     var data = '';
     res.on('data', function (buf) {
@@ -927,83 +1106,38 @@ EmissionEstimator.prototype.getEmissionEstimate = function(callback) {
     });
 
     res.on('error', function() {
-      var err = new Error('Failed to get emission estimate: ' + data);
+      var err = new Error('Failed to get impact estimate: ' + data);
       callback(err);
     });
 
     res.on('end', function () {
       var json = JSON.parse(data);
-      emitter.emissionEstimate = new EmissionEstimate(emitter, json);
-      callback(null, emitter.emissionEstimate);
+      subject.impacts = new ImpactEstimate(subject, json);
+      callback(null, subject.impacts);
     });
   });
-  req.end(JSON.stringify(this.params()));
+  req.end(JSON.stringify(this.params(subject)));
 };
 ;
     }).call(module.exports);
     
-    __require.modules["/emission-estimator.js"]._cached = module.exports;
+    __require.modules["/lib/impact-estimator.js"]._cached = module.exports;
     return module.exports;
 };
 
-require.alias("http-browserify", "/node_modules/http");
+require.alias("dkastner-http-browserify", "/node_modules/http");
 
 process.nextTick(function () {
     var module = { exports : {} };
     var exports = module.exports;
     var __dirname = "/";
-    var __filename = "//Users/dkastner/CM1.js/lib";
+    var __filename = "//Users/dkastner/CM1.js";
     
     var require = function (file) {
         return __require(file, "/");
     };
     require.modules = __require.modules;
     
-    var EmissionEstimate = require('./emission-estimate'),
-  EmissionEstimator = require('./emission-estimator');
-
-var CM1 = module.exports = function() {
-  this.attribute_map = {};
-};
-CM1.EmissionEstimate = EmissionEstimate;
-CM1.EmissionEstimator = EmissionEstimator;
-
-CM1.prototype.key = function() {
-  return CM1.key;
-};
-
-CM1.emitter = function(klass, definition) {
-  klass.cm1 = new CM1();
-  klass.cm1.define(definition);
-  klass.prototype.emissionEstimator = function() {
-    if(!this._emissionEstimator) {
-      this._emissionEstimator = new EmissionEstimator(this, klass.cm1);
-    }
-
-    return this._emissionEstimator;
-  };
-  klass.prototype.getEmissionEstimate = function(callback) {
-    return this.emissionEstimator().getEmissionEstimate(callback);
-  };
-};
-
-CM1.prototype.define = function(lambda) {
-  lambda(this);
-};
-
-CM1.prototype.emitAs = function(emitter_name) {
-  this.emitter_name = emitter_name;
-};
-
-CM1.prototype.provide = function(attribute, options) {
-  var actual_field;
-  if(options && options.as) {
-    actual_field = options.as;
-  } else {
-    actual_field = attribute;
-  }
-
-  this.attribute_map[attribute] = actual_field;
-};
+    var CM1 = require('./lib/CM1');
 ;
 });
