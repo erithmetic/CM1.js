@@ -8,8 +8,8 @@
   "engine": "*",
   "devDependencies": {
     "browserify": "*",
-    "coffeescript": "*",
-    "http-browserify": "*",
+    "coffee-script": "*",
+    "dkastner-http-browserify": "*",
     "jsdom": "*",
     "sinon": "*",
     "vows": "*"

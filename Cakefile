@@ -5,8 +5,8 @@ fs = require 'fs'
 task 'build', 'Build client-side CM1.js using browserify', ->
   console.log "Browserifying..."
   b = browserify {
-    require: { http: 'http-browserify' },
-    entry: 'lib/cm1.js'
+    require: { http: 'dkastner-http-browserify' },
+    entry: './browser.js'
   }
   fs.writeFileSync 'CM1.js', b.bundle()
   console.log 'CM1 is now browserified in CM1.js'
