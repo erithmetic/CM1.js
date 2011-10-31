@@ -25,7 +25,7 @@ Now we want to figure out how much CO2 it emits. CM1.js will add impact calculat
       }
     });
 
-This says "my RentalCar prototype will use the [Automobile emitter](http://carbon.brighterplanet.com/models/automobile) to calculate impacts. It uses the make property to provide make to the web service, model maps to model, and the fuel_economy property maps to fuel_efficiency on CM1.
+This says "my RentalCar prototype will use the [Automobile emitter](http://carbon.brighterplanet.com/models/automobile) to calculate impacts. It uses the make property to provide make to the web service, model maps to model, and the fuelEconomy property maps to fuel_efficiency on CM1.
 
 Now, we can calculate impacts:
 
