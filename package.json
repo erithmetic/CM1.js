@@ -12,6 +12,7 @@
     "coffee-script": "*",
     "dkastner-http-browserify": "*",
     "docco": "*",
+    "fakeweb": "*",
     "jsdom": "*",
     "sinon": "*",
     "vows": "*"
