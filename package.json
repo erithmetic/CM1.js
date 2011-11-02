@@ -10,6 +10,7 @@
     "browserify": "*",
     "coffee-script": "*",
     "dkastner-http-browserify": "*",
+    "docco": "*",
     "jsdom": "*",
     "sinon": "*",
     "vows": "*"
