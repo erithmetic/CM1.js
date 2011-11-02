@@ -1,10 +1,17 @@
-<!DOCTYPE html>  <html> <head>   <title>CM1.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               CM1.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>Carbon, energy, and other environmental impact calculations for your 
+<!DOCTYPE html>  <html> <head>   <title>cm1.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               cm1.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>Carbon, energy, and other environmental impact calculations for your 
 JavaScript objects. Built for the browser and Node.js.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">ImpactEstimate</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./impact-estimate&#39;</span><span class="p">),</span>
   <span class="nx">ImpactEstimator</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./impact-estimator&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">HttpAdapter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./adapters/http-adapter&#39;</span><span class="p">),</span>
+    <span class="nx">QueueAdapter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./adapters/queue-adapter&#39;</span><span class="p">),</span>
+    <span class="nx">WebsocketAdapter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./adapters/websocket-adapter&#39;</span><span class="p">);</span>
 
 <span class="kd">var</span> <span class="nx">CM1</span> <span class="o">=</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">attributeMap</span> <span class="o">=</span> <span class="p">{};</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>For a quick, one-off calculation, you can use CM1.impacts. Here's an example for a flight:</p>
+  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">CM1</span><span class="p">.</span><span class="nx">adapter</span><span class="p">)</span>
+    <span class="nx">CM1</span><span class="p">.</span><span class="nx">useHttpAdapter</span><span class="p">();</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Usage</h2>
+
+<p>For a quick, <strong>one-off calculation</strong>, you can use <code>CM1.impacts()</code>. Here's an example for a flight:</p>
 
 <pre><code>var CM1 = require('cm1');
 CM1.impacts('flight', {
@@ -17,14 +24,15 @@ CM1.impacts('flight', {
 function(err, impacts) {
   if(err) return console.log('Argh, falied!', err);
 
-  console.log('Carbon for my cross-country flight: ', impacts.carbon);
+  console.log('Carbon for my cross-country flight: ',
+              impacts.carbon);
   console.log('Methodology: ', impacts.methodology);
 });
 </code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">CM1</span><span class="p">.</span><span class="nx">impacts</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">properties</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">model</span> <span class="o">=</span> <span class="nx">CM1</span><span class="p">.</span><span class="nx">model</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">properties</span><span class="p">);</span>
   <span class="nx">model</span><span class="p">.</span><span class="nx">getImpacts</span><span class="p">(</span><span class="nx">callback</span><span class="p">);</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>If you don't want to mess around with prototypes, CM1.model gives you an object
-that you can define and run calculations on at a later time:</p>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Alternatively, <code>CM1.model()</code> can add impact calculation abilities to an
+<strong>existing object</strong> on which you can run calculations at a later time:</p>
 
 <pre><code>var CM1 = require('cm1');
 var model = CM1.model('flight', {
@@ -39,7 +47,8 @@ model.seat_class = 'Business';
 model.getImpacts(function(err, impacts) {
   if(err) return console.log('Argh, falied!', err);
 
-  console.log('Carbon for my international flight: ', impacts.carbon);
+  console.log('Carbon for my international flight: ',
+              impacts.carbon);
   console.log('Methodology: ', impacts.methodology);
 });
 </code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">CM1</span><span class="p">.</span><span class="nx">model</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">properties</span><span class="p">)</span> <span class="p">{</span>
@@ -58,8 +67,8 @@ model.getImpacts(function(err, impacts) {
   <span class="p">}</span>
 
   <span class="k">return</span> <span class="nx">object</span><span class="p">;</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>You can also turn any object into an impact calculating machine. For example, let's
-say we have an object representing a rental car:</p>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>You can also <strong>extend any prototype</strong> (class) to become and impact calculating machine. For example, let's
+say we have a class representing a rental car:</p>
 
 <pre><code>var RentalCar = function() {};
 
@@ -69,12 +78,13 @@ car.model = 'Fit';
 car.fuelEconomy = 36.7;
 </code></pre>
 
-<p>Now we want to figure out how much CO2 it emits. CM1.js will add impact calculation
-powers to your prototype. Before instantiating a RentalCar, use <code>CM1.extend()</code> to tell
-your prototype how to use CM1 to calculate impacts. The first argument is the prototype
-to extend, the second argument is a object that describes mappings between properties
-of your prototype instance to the characteristics sent to CM1. After executing
-<code>CM1.extend()</code>, A new function called <code>getImpacts()</code> will be added to your class.</p>
+<p>If you want to figure out how much CO2 it emits, use <code>CM1.extend()</code> to tell
+your prototype how to use CM1 to calculate impacts. The first argument is the
+prototype to extend, the second argument is a object that describes mappings
+between properties of your prototype instance to the characteristics sent to
+CM1. After executing <code>CM1.extend()</code>, A new function called <code>getImpacts()</code>
+will be added to your class. <code>CM1.extend()</code> must be run before instantiating
+the RentalCar.</p>
 
 <pre><code>var RentalCar = function() {};
 
@@ -91,7 +101,7 @@ CM1.extend(RentalCar, {
 impacts. It uses the make property to provide make to the web service, model maps to
 model, and the fuelEconomy property maps to fuel_efficiency on CM1.</p>
 
-<p>Now, we can calculate impacts:</p>
+<p>Now you can calculate impacts:</p>
 
 <pre><code>var car = new RentalCar();
 car.make = 'Honda';
@@ -132,19 +142,36 @@ browser until you <code>require('CM1')</code>.</p>             </td>            
     <span class="k">return</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CM1_KEY</span><span class="p">;</span>
   <span class="k">else</span>
     <span class="k">return</span> <span class="nx">CM1</span><span class="p">.</span><span class="nx">key</span><span class="p">;</span>
-<span class="p">};</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h2>Connection Adapters: HTTP, Websockets, etc.</h2>
 
-<span class="nx">CM1</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">define</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">mapping</span><span class="p">)</span> <span class="p">{</span>
+<p>CM1.js can use a <strong>standard RESTful HTTP</strong> adapter (default) or an <strong>HTML5 Websockets</strong> adapter.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>The <strong>standard HTTP</strong> adapter sends a separate HTTP request for each calculation 
+performed. This is ideal for when one or only a few calculations are made at 
+a given time.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">CM1</span><span class="p">.</span><span class="nx">useHttpAdapter</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">CM1</span><span class="p">.</span><span class="nx">adapter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HttpAdapter</span><span class="p">();</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>The <strong>Websockets</strong> adapter is ideal for when many calculations need to be made at once.
+You will need to <code>npm install socket.io</code> to use this.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">CM1</span><span class="p">.</span><span class="nx">useWebsocketAdapter</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">CM1</span><span class="p">.</span><span class="nx">adapter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebsocketAdapter</span><span class="p">();</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>The <strong>Queue</strong> adapter is for clients who have access to a CM1 queue.
+You will need to <code>npm install coffee-resque</code> to use this. You will 
+also need to configure a resque connection:</p>
+
+<pre><code>process.env.CM1_RESQUE_URL = 'redis://example.com:4321';
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">CM1</span><span class="p">.</span><span class="nx">useQueueAdapter</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">CM1</span><span class="p">.</span><span class="nx">adapter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">QueueAdapter</span><span class="p">();</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h2>Etc.</h2>
+
+<p>Apply a mapping to a CM1-enabled object.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">CM1</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">define</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">mapping</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">emitAs</span><span class="p">(</span><span class="nx">mapping</span><span class="p">.</span><span class="nx">model</span><span class="p">);</span>
   <span class="kd">var</span> <span class="nx">provisions</span> <span class="o">=</span> <span class="nx">mapping</span><span class="p">.</span><span class="nx">provide</span> <span class="o">||</span> <span class="nx">mapping</span><span class="p">.</span><span class="nx">provides</span><span class="p">;</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">provide</span><span class="p">(</span><span class="nx">provisions</span><span class="p">);</span>
-<span class="p">};</span>
-
-<span class="nx">CM1</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">emitAs</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">model</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>Set the model (e.g. flight) used for calculation.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">CM1</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">emitAs</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">model</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">model</span> <span class="o">=</span> <span class="nx">model</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="nx">CM1</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">provide</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">attributes</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Define the properties of the CM1-enabled object that are sent as
+characteristics to CM1's models.
+The format of <strong>attributes</strong> can be:
+* <code>['foo', 'bar', 'baz']</code>
+* <code>['foo', 'bar', 'baz', { quux: 'quuxValue' }]</code>
+* <code>{ foo: 'fooProperty',  quux: 'quuxValue' }</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">CM1</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">provide</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">attributes</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">attributes</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span><span class="p">(</span><span class="nx">attributes</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">i</span><span class="p">))</span> <span class="p">{</span>
       <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">attributes</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
@@ -167,7 +194,7 @@ browser until you <code>require('CM1')</code>.</p>             </td>            
 
 <span class="nx">CM1</span><span class="p">.</span><span class="nx">ImpactEstimate</span> <span class="o">=</span> <span class="nx">ImpactEstimate</span><span class="p">;</span>
 <span class="nx">CM1</span><span class="p">.</span><span class="nx">ImpactEstimator</span> <span class="o">=</span> <span class="nx">ImpactEstimator</span><span class="p">;</span>
- </pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h2>Deploy With Browserify</h2>
+ </pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <h2>Deploy With Browserify</h2>
 
 <p>CM1.js can be used with <a href="http://github.com/substack/node-browserify">browserify</a>.
 Simply <code>npm install CM1</code> and <code>require('CM1')</code> in your code.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
