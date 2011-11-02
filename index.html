@@ -1,0 +1,174 @@
+<!DOCTYPE html>  <html> <head>   <title>cm1.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               cm1.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>Carbon, energy, and other environmental impact calculations for your 
+JavaScript objects. Built for the browser and Node.js.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">ImpactEstimate</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./impact-estimate&#39;</span><span class="p">),</span>
+  <span class="nx">ImpactEstimator</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./impact-estimator&#39;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">CM1</span> <span class="o">=</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">attributeMap</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>For a quick, one-off calculation, you can use CM1.impacts. Here's an example for a flight:</p>
+
+<pre><code>var CM1 = require('cm1');
+CM1.impacts('flight', {
+  origin_airport: 'IAD',
+  destination_airport: 'PDX',
+  airline: 'United',
+  trips: 2,
+  segments_per_trip: 1    // nonstop flight
+},
+function(err, impacts) {
+  if(err) return console.log('Argh, falied!', err);
+
+  console.log('Carbon for my cross-country flight: ', impacts.carbon);
+  console.log('Methodology: ', impacts.methodology);
+});
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">CM1</span><span class="p">.</span><span class="nx">impacts</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">properties</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">model</span> <span class="o">=</span> <span class="nx">CM1</span><span class="p">.</span><span class="nx">model</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">properties</span><span class="p">);</span>
+  <span class="nx">model</span><span class="p">.</span><span class="nx">getImpacts</span><span class="p">(</span><span class="nx">callback</span><span class="p">);</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>If you don't want to mess around with prototypes, CM1.model gives you an object
+that you can define and run calculations on at a later time:</p>
+
+<pre><code>var CM1 = require('cm1');
+var model = CM1.model('flight', {
+  origin_airport: 'JFK',
+  destination_airport: 'Berlin',
+  airline: 'Luftansa'
+});
+
+// later...
+model.seat_class = 'Business';
+
+model.getImpacts(function(err, impacts) {
+  if(err) return console.log('Argh, falied!', err);
+
+  console.log('Carbon for my international flight: ', impacts.carbon);
+  console.log('Methodology: ', impacts.methodology);
+});
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">CM1</span><span class="p">.</span><span class="nx">model</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">properties</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">attributes</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">properties</span><span class="p">);</span>
+
+  <span class="kd">var</span> <span class="nx">proto</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{};</span>
+  <span class="nx">CM1</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">proto</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">model</span><span class="o">:</span> <span class="nx">type</span><span class="p">,</span>
+    <span class="nx">provides</span><span class="o">:</span> <span class="nx">attributes</span>
+  <span class="p">});</span>
+
+  <span class="kd">var</span> <span class="nx">object</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">proto</span><span class="p">();</span>
+  <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">attributes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">attribute</span> <span class="o">=</span> <span class="nx">attributes</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+    <span class="nx">object</span><span class="p">[</span><span class="nx">attribute</span><span class="p">]</span> <span class="o">=</span> <span class="nx">properties</span><span class="p">[</span><span class="nx">attribute</span><span class="p">];</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">object</span><span class="p">;</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>You can also turn any object into an impact calculating machine. For example, let's
+say we have an object representing a rental car:</p>
+
+<pre><code>var RentalCar = function() {};
+
+var car = new RentalCar();
+car.make = 'Honda';
+car.model = 'Fit';
+car.fuelEconomy = 36.7;
+</code></pre>
+
+<p>Now we want to figure out how much CO2 it emits. CM1.js will add impact calculation
+powers to your prototype. Before instantiating a RentlCar, use <code>CM1.extend()</code> to tell
+your prototype how to use CM1 to calculate impacts. The first argument is the prototype
+to extend, the second argument is a object that describes mappings between properties
+of your prototype instance to the characteristics sent to CM1. After executing
+<code>CM1.extend()</code>, A new function called <code>getImpacts()</code> will be added to your class.</p>
+
+<pre><code>var RentalCar = function() {};
+
+CM1.extend(RentalCar, {
+  model: 'automobile',
+  provides: ['make', 'model', {
+    'fuel_efficiency': 'fuelEconomy'
+  }
+});
+</code></pre>
+
+<p>This says "my RentalCar prototype will use the
+<a href="http://carbon.brighterplanet.com/models/automobile">Automobile emitter</a> to calculate
+impacts. It uses the make property to provide make to the web service, model maps to
+model, and the fuelEconomy property maps to fuel_efficiency on CM1.</p>
+
+<p>Now, we can calculate impacts:</p>
+
+<pre><code>var car = new RentalCar();
+car.make = 'Honda';
+car.model = 'Fit';
+car.fuelEconomy = 36.7;
+
+car.getImpacts(function(err, impacts) {
+  if(err) alert("Oops, something broke: " + err);
+
+  alert("My emissions are: " + impacts.carbon);
+  alert("My fuel use is: " + impacts.fuelUse);
+});
+</code></pre>
+
+<p>There are a whole bunch of <a href="http://carbon.brighterplanet.com/models">other models</a>
+available, including computer usage, rail trips, and flights.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">CM1</span><span class="p">.</span><span class="nx">extend</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">klass</span><span class="p">,</span> <span class="nx">mapping</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">klass</span><span class="p">.</span><span class="nx">cm1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CM1</span><span class="p">();</span>
+  <span class="nx">klass</span><span class="p">.</span><span class="nx">cm1</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="nx">mapping</span><span class="p">);</span>
+  <span class="nx">klass</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">impactEstimator</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ImpactEstimator</span><span class="p">(</span><span class="nx">klass</span><span class="p">.</span><span class="nx">cm1</span><span class="p">);</span>
+  <span class="nx">klass</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getImpacts</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">impactEstimator</span><span class="p">.</span><span class="nx">getImpacts</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
+  <span class="p">};</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h2>Specifying an API Key</h2>
+
+<p>CM1 is free for non-commercial use and available for commercial use. Commercial
+use requires an API key, and we recommend obtaining a non-commercial key for
+non-commercial use, as it will prevent rate-limiting. You can get a key at
+<a href="http://keys.brighterplanet.com">keys.brighterplanet.com</a>.</p>
+
+<p>Once you have your key, you can specify it with:</p>
+
+<pre><code>var CM1 = require('CM1');
+process.env.CM1_KEY = 'ABC123';
+</code></pre>
+
+<p>Note: if using the stand-alone library, <code>process.env</code> won't be available in your
+browser until you <code>require('CM1')</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">CM1</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">key</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span><span class="p">(</span><span class="nx">process</span> <span class="o">&amp;&amp;</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span> <span class="o">&amp;&amp;</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CM1_KEY</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CM1_KEY</span><span class="p">;</span>
+  <span class="k">else</span>
+    <span class="k">return</span> <span class="nx">CM1</span><span class="p">.</span><span class="nx">key</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">CM1</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">define</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">mapping</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">emitAs</span><span class="p">(</span><span class="nx">mapping</span><span class="p">.</span><span class="nx">model</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">provisions</span> <span class="o">=</span> <span class="nx">mapping</span><span class="p">.</span><span class="nx">provide</span> <span class="o">||</span> <span class="nx">mapping</span><span class="p">.</span><span class="nx">provides</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">provide</span><span class="p">(</span><span class="nx">provisions</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">CM1</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">emitAs</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">model</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">model</span> <span class="o">=</span> <span class="nx">model</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">CM1</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">provide</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">attributes</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">attributes</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">attributes</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">i</span><span class="p">))</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">attributes</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+      <span class="k">if</span><span class="p">(</span><span class="k">typeof</span> <span class="nx">value</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">provide</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="sr">/^\d+$/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">i</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">attributeMap</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">underscore</span><span class="p">(</span><span class="nx">value</span><span class="p">)]</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">attributeMap</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">underscore</span><span class="p">(</span><span class="nx">i</span><span class="p">)]</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">CM1</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">underscore</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">string</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/([a-z])([A-Z])/g</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="nx">first</span><span class="p">,</span> <span class="nx">second</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">first</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nx">second</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">();</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+
+<span class="nx">CM1</span><span class="p">.</span><span class="nx">ImpactEstimate</span> <span class="o">=</span> <span class="nx">ImpactEstimate</span><span class="p">;</span>
+<span class="nx">CM1</span><span class="p">.</span><span class="nx">ImpactEstimator</span> <span class="o">=</span> <span class="nx">ImpactEstimator</span><span class="p">;</span>
+ </pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h2>Deploy With Browserify</h2>
+
+<p>CM1.js can be used with <a href="http://github.com/substack/node-browserify">browserify</a>.
+Simply <code>npm install CM1</code> and <code>require('CM1')</code> in your code.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
