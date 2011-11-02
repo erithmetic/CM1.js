@@ -30,7 +30,7 @@ task 'test', 'Run all tests', ->
 
 task 'pages', 'Update gh-pages', ->
   async.series([
-    run('./node_modules/.bin/docco lib/CM1.js'),
+    run('./node_modules/.bin/docco lib/cm1.js'),
     run('git checkout gh-pages'),
     run('cp docs/cm1.html index.html')
     run('git add index.html'),
