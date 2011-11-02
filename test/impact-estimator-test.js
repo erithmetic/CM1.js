@@ -2,14 +2,6 @@ require('./helper');
 var RentalCar = require('./fixtures/rental-car'),
     Cm1Result = require('./fixtures/cm1-result');
 
-var fakeweb = require('fakeweb'),
-    http = require('http');
-http.register_intercept({
-    uri: '/automobiles.json', 
-    host: 'impact.brighterplanet.com',
-    body: JSON.stringify(Cm1Result.fit)
-});
-
 var ImpactEstimate = require('../lib/impact-estimate'),
     ImpactEstimator = CM1.ImpactEstimator;
 
@@ -50,44 +42,14 @@ vows.describe('ImpactEstimator').addBatch({
   },
 
   '#getImpacts': {
-    topic: function() {
-      var car = new RentalCar();
-      car.getImpacts(this.callback);
-    },
-    'sends a null err': function(err) {
-      assert.isNull(err);
-    },
-    'calls the callback with the impactEstimate': function(err, estimate) {
-      assert.instanceOf(estimate, ImpactEstimate);
-    },
-    "sets the data attribute on the emitter's ImpactEstimate": function(err, estimate) {
-      assert.deepEqual(estimate.data, Cm1Result.fit);
-    }
-  },
-
-  '#pluralize': {
     topic: new ImpactEstimator(RentalCar.cm1),
 
-    'adds an "s" to any string': function(estimator) {
-      assert.equal(estimator.pluralize('Car'),'Cars')
-      assert.equal(estimator.pluralize('operas'),'operass')
-    },
-    'adds special pluralization to emitter names that need it': function(estimator) {
-      assert.equal(estimator.pluralize('automobile'),      'automobiles');
-      assert.equal(estimator.pluralize('automobile_trip'), 'automobile_trips');
-      assert.equal(estimator.pluralize('bus_trip'),        'bus_trips');
-      assert.equal(estimator.pluralize('diet'),            'diets');
-      assert.equal(estimator.pluralize('electricity_use'), 'electricity_uses');
-      assert.equal(estimator.pluralize('flight'),          'flights');
-      assert.equal(estimator.pluralize('fuel_purchase'),   'fuel_purchases');
-      assert.equal(estimator.pluralize('lodging'),         'lodgings');
-      assert.equal(estimator.pluralize('meeting'),         'meetings');
-      assert.equal(estimator.pluralize('motorcycle'),      'motorcycles');
-      assert.equal(estimator.pluralize('pet'),             'pets');
-      assert.equal(estimator.pluralize('purchase'),        'purchases');
-      assert.equal(estimator.pluralize('rail_trip'),       'rail_trips');
-      assert.equal(estimator.pluralize('residence'),       'residences');
-      assert.equal(estimator.pluralize('shipment'),        'shipments');
+    'delegates to the current adapter': function(estimator) {
+      var car = new RentalCar();
+      CM1.useHttpAdapter();
+      sinon.spy(estimator.cm1.adapter,'getImpacts');
+      estimator.getImpacts(car, function() {});
+      assert.isTrue(estimator.cm1.adapter.getImpacts.called);
     }
   }
 }).export(module, { error: false });
