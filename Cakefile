@@ -1,6 +1,19 @@
 browserify = require 'browserify'
 child = require 'child_process'
 fs = require 'fs'
+async = require 'async'
+
+run = (cmd) ->
+  return (callback) ->
+    console.log cmd
+    child.exec cmd, (err, stdout, stderr) ->
+      if err
+        callback(err)
+      else
+        console.log(stdout)
+        console.log(stderr)
+        callback(null)
+
 
 task 'build', 'Build client-side CM1.js using browserify', ->
   console.log "Browserifying..."
@@ -16,13 +29,15 @@ task 'test', 'Run all tests', ->
   child.exec './node_modules/.bin/vows test/*-test.js'
 
 task 'pages', 'Update gh-pages', ->
-  child.exec './node_modules/.bin/docco lib/cm1.js'
-  cm1 = fs.readFileSync('docs/cm1.html');
-  css = fs.readFileSync('docs/docco.css');
-  child.exec 'git checkout gh-pages'
-  fs.writeFileSync 'index.html', cm1
-  fs.writeFileSync 'docco.css', css
-  child.exec 'git add index.html docco.css'
-  child.exec 'git commit -m "update gh-pages"'
-  child.exec 'git push origin gh-pages'
-  child.exec 'git checkout master'
+  async.series([
+    run('./node_modules/.bin/docco lib/CM1.js'),
+    run('git checkout gh-pages'),
+    run('cp docs/cm1.html index.html')
+    run('git add index.html'),
+    run('git commit -m "update gh-pages"'),
+    run('git push origin gh-pages'),
+    run('git checkout master')
+  ],
+  (err) ->
+    console.log('Error:',err) if err
+  )

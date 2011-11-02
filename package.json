@@ -7,6 +7,7 @@
   "main": "lib/cm1.js",
   "engine": "*",
   "devDependencies": {
+    "async": "*",
     "browserify": "*",
     "coffee-script": "*",
     "dkastner-http-browserify": "*",
