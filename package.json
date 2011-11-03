@@ -15,6 +15,7 @@
     "fakeweb": "*",
     "jsdom": "*",
     "sinon": "*",
+    "socket.io-client": "*",
     "vows": "*"
   },
   "repository": {
