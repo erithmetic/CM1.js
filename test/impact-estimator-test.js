@@ -5,7 +5,27 @@ var RentalCar = require('./fixtures/rental-car'),
 var ImpactEstimate = require('../lib/impact-estimate'),
     ImpactEstimator = CM1.ImpactEstimator;
 
+CM1.useHttpAdapter();
+
 vows.describe('ImpactEstimator').addBatch({
+  '.callbacks': {
+    '.getImpacts': {
+      'sets subject.impacts to the result on success': function() {
+        var car = {};
+        var cb = ImpactEstimator.callbacks.getImpacts(car, function() {});
+        cb(null, Cm1Result.fit);
+        assert.equal(car.impacts, Cm1Result.fit);
+      },
+      'passes along the error on failure': function() {
+        var clientCallback = sinon.spy();
+        var cb = ImpactEstimator.callbacks.getImpacts({}, clientCallback);
+        var err = 'I have failed, my Leige';
+        cb(err);
+        assert.ok(clientCallback.calledWith(err));
+      }
+    }
+  },
+
   '#params': {
     topic: new ImpactEstimator(RentalCar.cm1),
 
@@ -46,10 +66,13 @@ vows.describe('ImpactEstimator').addBatch({
 
     'delegates to the current adapter': function(estimator) {
       var car = new RentalCar();
-      CM1.useHttpAdapter();
-      sinon.spy(estimator.cm1.adapter,'getImpacts');
+
+      var adapter = sinon.mock(estimator.cm1.adapter());
+      adapter.expects('getImpacts');
+
       estimator.getImpacts(car, function() {});
-      assert.isTrue(estimator.cm1.adapter.getImpacts.called);
-    }
+
+      adapter.verify();
+    },
   }
 }).export(module, { error: false });
