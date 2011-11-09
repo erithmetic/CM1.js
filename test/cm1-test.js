@@ -4,7 +4,6 @@ var Cm1Result = require('./fixtures/cm1-result'),
     RentalCar = require('./fixtures/rental-car');
 
 var HttpAdapter = require('../lib/adapters/http-adapter'),
-    QueueAdapter = require('../lib/adapters/queue-adapter'),
     WebsocketAdapter = require('../lib/adapters/websocket-adapter');
 
 var fakeweb = require('fakeweb'),
@@ -62,14 +61,6 @@ vows.describe('CM1').addBatch({
         CM1.useHttpAdapter();
       }
     },
-
-    'queue': {
-      'use the queue adapter': function() {
-        CM1.useQueueAdapter();
-        assert.instanceOf(CM1.adapter, QueueAdapter);
-        CM1.useHttpAdapter();
-      }
-    }
   },
 
   '.key': {
