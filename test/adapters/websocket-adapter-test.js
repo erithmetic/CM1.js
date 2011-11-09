@@ -18,7 +18,7 @@ vows.describe('WebsocketAdapter').addBatch({
           var func = WebsocketAdapter.callbacks.getImpacts(subject, this.callback);
           func({
             statusCode: 200,
-            body: Cm1WebsocketResult.fit
+            body: JSON.stringify(Cm1WebsocketResult.fit)
           });
         },
 
@@ -50,9 +50,14 @@ vows.describe('WebsocketAdapter').addBatch({
         annual_distance_estimate: 24000,
         make: 'Trabant'
       };
+      var emitParams = {
+        'PATH_INFO': '/automobiles.json',
+        'body': JSON.stringify(params)
+      };
+
 
       var mock = sinon.mock(adapter.socket);
-      mock.expects('emit').withArgs('automobiles', params);
+      mock.expects('emit').withArgs('impacts', emitParams);
 
       adapter.getImpacts(cm1, car, params);
 
