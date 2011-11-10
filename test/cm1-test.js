@@ -63,6 +63,31 @@ vows.describe('CM1').addBatch({
     },
   },
 
+  '.setAdapter': {
+    'uses http by default': function() {
+      CM1.adapter = null;
+      CM1.setAdapter();
+      assert.instanceOf(CM1.adapter, HttpAdapter);
+    },
+    'uses http if specified in env': function() {
+      process.env.CM1_ADAPTER = 'http';
+      CM1.adapter = null;
+      CM1.setAdapter();
+      assert.instanceOf(CM1.adapter, HttpAdapter);
+    },
+    'uses websocket adapter if specified in env': function() {
+      process.env.CM1_ADAPTER = 'websocket';
+      CM1.adapter = null;
+      CM1.setAdapter();
+      assert.instanceOf(CM1.adapter, WebsocketAdapter);
+    },
+    'uses specified adapter': function() {
+      CM1.adapter = null;
+      CM1.setAdapter('websocket');
+      assert.instanceOf(CM1.adapter, WebsocketAdapter);
+    }
+  },
+
   '.key': {
     'uses process.env.CM1_KEY if available': function() {
       CM1.key = null;
