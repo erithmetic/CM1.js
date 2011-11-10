@@ -1,6 +1,6 @@
 {
   "name": "CM1",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "author": "Derek Kastner <dkastner@gmail.com>",
   "description": "JavaScript API for Brighter Planet's CM1 carbon/impact calculation service",
   "homepage": "http://github.com/brighterplanet/CM1.js",
