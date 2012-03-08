@@ -14,14 +14,20 @@ http.register_intercept({
 });
 
 vows.describe('HttpAdapter').addBatch({
+  '#path': {
+    topic: function() {
+      return new HttpAdapter();
+    },
+    'returns a path for the model': function(adapter) {
+      assert.equal(adapter.path({ model: 'automobile' }), '/automobiles.json');
+    }
+  },
+
   '#getImpacts': {
     topic: function() {
       var adapter = new HttpAdapter();
       adapter.getImpacts({model: 'automobile'}, {}, {}, this.callback);
     },
-    //'sends a null err': function(err) {
-      //assert.isNull(err);
-    //},
     'calls the callback with the impactEstimate': function(err, estimate) {
       assert.instanceOf(estimate, ImpactEstimate);
     },
