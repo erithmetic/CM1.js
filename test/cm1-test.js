@@ -1,4 +1,5 @@
 require('./helper');
+//var replay = require('replay');
 
 var Cm1Result = require('./fixtures/cm1-result'),
     RentalCar = require('./fixtures/rental-car');
@@ -6,13 +7,13 @@ var Cm1Result = require('./fixtures/cm1-result'),
 var HttpAdapter = require('../lib/adapters/http-adapter'),
     WebsocketAdapter = require('../lib/adapters/websocket-adapter');
 
-var fakeweb = require('fakeweb'),
-    http = require('http');
-http.register_intercept({
-    uri: '/automobiles.json', 
-    host: 'impact.brighterplanet.com',
-    body: JSON.stringify(Cm1Result.fit)
-});
+//var fakeweb = require('fakeweb'),
+    //http = require('http');
+//http.register_intercept({
+    //uri: '/automobiles.json', 
+    //host: 'impact.brighterplanet.com',
+    //body: JSON.stringify(Cm1Result.fit)
+//});
 
 var car = new RentalCar();
 car.make = 'Honda';
@@ -21,7 +22,7 @@ car.fuelEconomy = 36.7;
 
 vows.describe('CM1').addBatch({
   'usage': {
-    'standard': {
+    'classic': {
       topic: function() {
         car.getImpacts(this.callback);
       },
@@ -32,6 +33,17 @@ vows.describe('CM1').addBatch({
       "sets the emitter's impacts property": function() {
         assert.equal(car.impacts.carbon, 3362.979842566016);
       }
+    },
+    'one-off': {
+      topic: function() {
+        var impacts = CM1.impacts('automobile', {
+          make: 'Nissan', model: 'Versa'
+        }, this.callback);
+      },
+
+      'asynchronously calculates emissions': function(err, impacts) {
+        assert(impacts.carbon > 0);
+      },
     },
 
     'uses the HTTP adapter': function() {
@@ -44,14 +56,6 @@ vows.describe('CM1').addBatch({
         origin_airport: 'ORD', destination_airport: 'LGA'
       });
       assert.isFunction(model.getImpacts);
-    },
-
-    'allows for one-off calculations': function() {
-      var callback = sinon.spy();
-      var impacts = CM1.impacts('automobile', {
-        make: 'Nissan', model: 'Versa'
-      }, callback);
-      assert.isTrue(callback.called);
     },
 
     'websockets': {

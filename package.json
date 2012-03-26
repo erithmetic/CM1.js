@@ -14,8 +14,10 @@
     "docco": "*",
     "fakeweb": "*",
     "jsdom": "*",
+    "replay": "*",
     "sinon": "*",
     "socket.io-client": "*",
+    "testling": "*",
     "vows": "*"
   },
   "repository": {
