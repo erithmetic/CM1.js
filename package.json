@@ -6,11 +6,14 @@
   "homepage": "http://github.com/brighterplanet/CM1.js",
   "main": "lib/cm1.js",
   "engine": "*",
+  "dependencies": {
+    "JSON": "*"
+  },
   "devDependencies": {
     "async": "*",
     "browserify": "*",
     "coffee-script": "*",
-    "dkastner-http-browserify": "*",
+    "http-browserify": "0.1.1",
     "docco": "*",
     "fakeweb": "*",
     "jsdom": "*",
@@ -18,6 +21,7 @@
     "sinon": "*",
     "socket.io-client": "*",
     "testling": "*",
+    "underscore": "*",
     "vows": "*"
   },
   "repository": {
