@@ -16,7 +16,6 @@
     "coffee-script": "*",
     "http-browserify": "0.1.1",
     "docco": "*",
-    "fakeweb": "*",
     "jsdom": "*",
     "replay": "*",
     "sinon": "*",

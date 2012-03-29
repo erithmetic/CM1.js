@@ -26,7 +26,13 @@ task 'build', 'Build client-side CM1.js using browserify', ->
 
 task 'test', 'Run all tests', ->
   console.log "Testing"
-  child.exec './node_modules/.bin/vows test/*-test.js'
+  opts = {
+    env: process.env
+  }
+  opts.env.REPLAY ||= 'replay'
+  child.exec 'vows', opts, (code, stdout, stderr) ->
+    console.log stdout
+    console.log stderr
 
 task 'pages', 'Update gh-pages', ->
   async.series([
