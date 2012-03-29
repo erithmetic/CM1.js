@@ -1,19 +1,11 @@
 require('./helper');
-//var replay = require('replay');
+var replay = require('replay');
 
 var Cm1Result = require('./fixtures/cm1-result'),
     RentalCar = require('./fixtures/rental-car');
 
 var HttpAdapter = require('../lib/adapters/http-adapter'),
     WebsocketAdapter = require('../lib/adapters/websocket-adapter');
-
-//var fakeweb = require('fakeweb'),
-    //http = require('http');
-//http.register_intercept({
-    //uri: '/automobiles.json', 
-    //host: 'impact.brighterplanet.com',
-    //body: JSON.stringify(Cm1Result.fit)
-//});
 
 var car = new RentalCar();
 car.make = 'Honda';
@@ -28,10 +20,10 @@ vows.describe('CM1').addBatch({
       },
 
       'asynchronously calculates emissions for an emitter': function(err, impacts) {
-        assert.equal(impacts.carbon, 3362.979842566016);
+        assert(impacts.carbon > 0);
       },
       "sets the emitter's impacts property": function() {
-        assert.equal(car.impacts.carbon, 3362.979842566016);
+        assert(car.impacts.carbon > 0);
       }
     },
     'one-off': {

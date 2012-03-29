@@ -1,10 +1,10 @@
 POST /automobiles.json
-content-type: application/json
-content-length: 33
+content-type: application/x-www-form-urlencoded
+content-length: 23
 
 200 HTTP/1.1
 server: nginx
-date: Mon, 26 Mar 2012 14:49:40 GMT
+date: Wed, 28 Mar 2012 20:48:22 GMT
 content-type: application/json
 transfer-encoding: chunked
 connection: keep-alive

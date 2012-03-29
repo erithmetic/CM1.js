@@ -5,14 +5,6 @@ var HttpAdapter = require('../../lib/adapters/http-adapter');
 
 var ImpactEstimate = require('../../lib/impact-estimate');
 
-var fakeweb = require('fakeweb'),
-    http = require('http');
-http.register_intercept({
-    uri: '/automobiles.json', 
-    host: 'impact.brighterplanet.com',
-    body: JSON.stringify(Cm1Result.fit)
-});
-
 vows.describe('HttpAdapter').addBatch({
   '#path': {
     topic: function() {
@@ -32,7 +24,7 @@ vows.describe('HttpAdapter').addBatch({
       assert.instanceOf(estimate, ImpactEstimate);
     },
     "sets the data attribute on the emitter's ImpactEstimate": function(err, estimate) {
-      assert.deepEqual(estimate.data, Cm1Result.fit);
+      assert.isNumber(estimate.data.decisions.carbon.object.value);
     }
   },
 }).export(module);
