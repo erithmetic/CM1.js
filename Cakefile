@@ -18,7 +18,7 @@ run = (cmd) ->
 task 'build', 'Build client-side CM1.js using browserify', ->
   console.log "Browserifying..."
   b = browserify {
-    require: { http: 'dkastner-http-browserify' },
+    require: { http: 'http-browserify' },
     entry: './browser.js'
   }
   fs.writeFileSync 'CM1.js', b.bundle()
