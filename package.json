@@ -29,5 +29,8 @@
   },
   "engines": {
     "node": "*"
+  },
+  "scripts": {
+    "test": "vows test/*-test.js"
   }
 }
