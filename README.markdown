@@ -4,6 +4,8 @@ Carbon, energy, and other environmental impact calculations for your JavaScript 
 
 For documentation, see [http://dkastner.github.com/CM1.js/](http://dkastner.github.com/CM1.js/)
 
+[![Build Status](https://secure.travis-ci.org/dkastner/CM1.js.png)](http://travis-ci.org/dkastner/CM1.js)
+
 ## Development environment
 
     $ git clone git://github.com/dkastner/CM1.js
